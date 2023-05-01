@@ -36,9 +36,15 @@ app.use(mongoSanitize())
 
 // Data transfer congiruation
 app.use(bodyParser.json({
-    limit: '30kbs'
+    limit: '10mb'
 }))
-app.use(express.json())
+app.use(bodyParser.urlencoded({
+    limit: '10mb'
+}))
+app.use(express.json({
+    limit: '10mb'
+}))
+
 app.use(cookieParser())
 app.use(compression())
 
