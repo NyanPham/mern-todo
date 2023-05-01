@@ -1,4 +1,4 @@
-import app from './app.js'
+import app from './app'
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 
@@ -16,6 +16,6 @@ mongoose
             console.log(`Server is running on port ${PORT}!`)
         })
     })
-    .catch('Failed to connect to the database')
+    .catch((error: any) => console.log( 'Failed to connect to the database'))
 
 // run server

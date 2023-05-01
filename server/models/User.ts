@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-    
+
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -19,9 +19,9 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         validate: {
-            validator: function (confirmString){
+            validator: function (confirmString: string){
                 return confirmString === this.password
-            },
+            },  
             message: 'Passwords do not match!'
         }
     },  
