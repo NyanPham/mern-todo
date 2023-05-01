@@ -94,13 +94,11 @@ export const protect = async (req: express.Request, res: express.Response, next:
 
 export const restrictTo = (...roles : string[]) => async(req: IGetUserAuthInfoRequest, res: express.Response, next: express.NextFunction) => {
     try {
-        const { currentUser } = req
-
-        if (currentUser == null) {
+        if (req.currentUser == null) {
             throw new Error("You have not logged in!")
         }
 
-        if (!roles.includes(currentUser.role)) {
+        if (!roles.includes(req.currentUser.role)) {
             throw new Error("You have no permission!")
         }
 
@@ -185,7 +183,7 @@ export const resetPassword = async (req: express.Request , res: express.Response
     try {
         const { resetToken } = req.params
         const { password, passwordConfirm } = req.body
-
+        
         if (resetToken == null || password == null || passwordConfirm == null) {
             throw new Error("Please provide required fields!")
         }
@@ -208,6 +206,9 @@ export const resetPassword = async (req: express.Request , res: express.Response
         }
 
         user.password = password
+        user.passwordResetToken = undefined
+        user.passwordResetExpires = undefined
+
         await user.save()
 
         res.status(200).json({

@@ -4,9 +4,10 @@ import { protect, restrictTo } from '../controllers/authController'
     
 const router = express.Router()
 
-// For User
+router.use(protect)
 //@ts-ignore
-router.route("/").get(protect, restrictTo('user'), getAllUsers).post(createUser)
+router.use(restrictTo('admin'))
+router.route("/").get(protect, getAllUsers).post(createUser)
 router.route('/:id').get(getUser).patch(updateUser).delete(deleteUser)
-
+    
 export default router

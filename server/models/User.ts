@@ -3,7 +3,6 @@ import bcrypt from 'bcrypt'
 
 import { createResetPasswordToken, hashPassword, modifyUserAttributes, passwordChangedAfterTokenIssued } from '../middlewares/userMiddlewares'
 
-
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -32,7 +31,7 @@ const userSchema = new mongoose.Schema({
     favorites: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Task'
-    }],     
+    }],  
     role: {
         type: String,
         default: "user"
@@ -55,11 +54,21 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     }
+}, {
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true }
 })
 
 userSchema.methods.comparePassword = async function(candiatePassword: string, password: string) : Promise<boolean> {
     return await bcrypt.compare(candiatePassword + process.env.AUTH_PROTECT_KEY, password)
 } 
+
+// populate tasks
+userSchema.virtual('tasks', {
+    ref: 'Task',
+    localField: '_id',
+    foreignField: 'userId'
+})  
 
 userSchema.methods.changedPasswordAfter = passwordChangedAfterTokenIssued
 userSchema.methods.createResetPasswordToken = createResetPasswordToken

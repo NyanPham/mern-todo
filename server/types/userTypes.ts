@@ -10,7 +10,24 @@ export interface IUser {
     comparePassword?: (candidatePassword: string, password: string) => Promise<boolean>,
     createResetPasswordToken?: () => string,
 }
-
+    
 export interface IGetUserAuthInfoRequest extends Request {
-    currentUser: IUser
+    currentUser?: IUser | null | undefined,
+    params?: IRequestParams
+}
+
+export interface IUpdateItemRequestBody {
+    userId?: string | number | null
+}
+
+export interface IRequestParams {
+    id?: string | number | null
+}
+
+export interface ITaskToUpdate {
+    title?: string,
+    subtitle?: string,
+    isComplete?: boolean,
+    imageSrc?: boolean,
+    userId?: string | number | null
 }
