@@ -1,5 +1,6 @@
-import catchAsync from "../helpers/catchAsync"
+import User from "../models/User"
 import Task from "../models/Task"
+import catchAsync from "../helpers/catchAsync"
 import { Response } from "express"
 import { IGetUserAuthInfoRequest, ITaskToUpdate } from "../types/userTypes"
 
@@ -77,6 +78,20 @@ export const deleteMyTask = catchAsync(async(req: IGetUserAuthInfoRequest, res: 
     await Task.findOneAndDelete({
         _id: req.params.id,
         userId: req.currentUser._id
+    })
+
+    res.status(204).json({
+        status: 'success',
+        data: null
+    })
+})
+    
+export const deactivateMyAccount = catchAsync(async (req: IGetUserAuthInfoRequest, res: Response) => {
+    await User.findByIdAndUpdate(req.currentUser._id, {
+        active: false
+    }, {
+        runValidators: true,
+        new: true
     })
 
     res.status(204).json({

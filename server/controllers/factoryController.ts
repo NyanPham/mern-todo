@@ -7,9 +7,9 @@ interface ITaskCreate {
     field?: string | null
 }
 
-export const getAll = (Model : Record<string, any>) => catchAsync(async (req: IGetUserAuthInfoRequest , res: express.Response) => {
-    const data = await Model.find()
-
+export const getAll = (Model : Record<string, any>, filterOptions: object | null = {}) => catchAsync(async (req: IGetUserAuthInfoRequest , res: express.Response) => {
+    const data = await Model.find(filterOptions)
+    
     res.status(200).json({
         status: 'success',
         results: data.length,
