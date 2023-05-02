@@ -19,10 +19,10 @@ const app = express()
 // Security configuration
 app.use(helmet())
 app.use(cors({
-    origin: 'http:localhost:3000'
+    origin: ['http:localhost:3000', 'http://localhost:5173']
 }))
 app.options('*', cors({
-    origin: 'http:localhost:3000'
+    origin: ['http:localhost:3000', 'http://localhost:5173']
 }))
 const limiter = rateLimit({
 	max: 300,
