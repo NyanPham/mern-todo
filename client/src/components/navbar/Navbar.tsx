@@ -3,15 +3,15 @@ import SearchBar from "./SearchBar"
 import UserMenu from "./UserMenu"
 
 const Navbar = () => {
-  return (
-    <header className="sticky top-0 left-0 w-full">
-        <nav className="w-full py-4 px-7 flex flex-row items-center justify-between shadow-md bg-white"> 
-            <Logo />
-            <SearchBar />
-            <UserMenu />
-        </nav>
-    </header>
-  )
+	return (
+		<header className="fixed top-0 left-0 w-full">
+			<nav className="w-full py-4 px-7 flex flex-row items-center justify-between shadow-md bg-white/30"> 
+				<Logo />
+				<SearchBar />
+				<UserMenu />
+			</nav>
+		</header>
+	)
 }
 
 export default Navbar

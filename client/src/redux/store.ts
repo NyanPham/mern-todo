@@ -2,12 +2,14 @@ import { configureStore } from '@reduxjs/toolkit'
 import registerModalSlice from './registerModalSlice'
 import loginModalSlice from './loginModalSlice'
 import userSlice from './userSlice'
-
+import toastSlice from './toastSlice'
+  
 export const store = configureStore({
   reducer: {
     registerModal: registerModalSlice,
     loginModal: loginModalSlice,
-    currentUser: userSlice
+    currentUser: userSlice,
+    toast: toastSlice
   },
 })
 

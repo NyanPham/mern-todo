@@ -1,33 +1,23 @@
-import { useReducer } from "react";
+import { useState, useCallback } from 'react'
 
-const ACTIONS = {
-    ON_CHANGE: "on-change"
-}
+export default function useForm<T>(initialState : T) {
+    const [form, setForm] = useState<T>(initialState)
 
-interface IActionProps {
-    type: string,
-    payload?: any 
-}
+    const onFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setForm(prevForm => ({
+            ...prevForm,
+            [e.target.name]: e.target.value
+        }))
+    }   
 
-const reducer = (state: any, { type, payload } : IActionProps) => {
-    switch (type) { 
-        case ACTIONS.ON_CHANGE: 
-            return {
-                ...state,
-                [payload.name]: payload.value
-            }
-    }
-}
+    const validateIfEmpty = useCallback((value: any) => {
+        if (value === "" || value == null) return {
+            message: "Please fill in this field",
+            isError: true,
+        }
 
-export default function useForm(initialState: any) {
-    const [state, dispatch] = useReducer(reducer, initialState)  
+        return { message: "", isError: true }
+    }, []) 
 
-    const onChange = (e) => {
-        
-    }
-   
-    return {    
-        state,
-        dispatch
-    }
+    return { form, onFormChange, validateIfEmpty }
 }

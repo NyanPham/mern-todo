@@ -6,7 +6,7 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="relative">
+    <div className="relative pt-20 bg-gradient-to-tr from-purple-900 to-emerald-400 h-screen">
         <Navbar />
         <main>{children}</main>
     </div>

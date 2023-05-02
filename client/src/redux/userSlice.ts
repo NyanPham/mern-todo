@@ -1,50 +1,35 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import type { RootState } from './store'
-
-type Task = {
-    title: string,
-    subtitle?: string,
-    isComplete: boolean,
-    createdAt: Date,
-    modifiedAt: Date
-}
+import { CurrentUser } from '../types'
 
 interface UserState {
-    value: {
-        userInfo: {
-            name: string, 
-            email: string,
-            id: string,
-            tasks: Task[]
-        } | null,
-        isLoading: boolean,
-        errors?: string,
-        message?: string
-    } | null
-}   
-          
-// Define the initial state using that type
+    userInfo: CurrentUser | null,
+    isLoading: boolean,
+    errors?: string,
+    message?: string
+}       
+
 const initialState: UserState = {
-    value: null,
+    userInfo: null,
+    isLoading: false,
+    errors: "",
+    message: "",
 }   
 
 export const userSlice = createSlice({
   name: 'currentUser',
-
   initialState,
   reducers: {
-    open: (state) => {
-
+    setCurrentUser: (state, action: PayloadAction<CurrentUser>) => {
+        state.userInfo = action.payload
     },  
-    close: (state) => {
-      
-    },
-  },
-  extraReducers: (builder) => {
-  }
+    removeCurrentUser: (state => {
+        state.userInfo = null
+    })
+  },    
 })
-  
-export const { open, close } = userSlice.actions
-export const isOpen = (state: RootState) => state.currentUser.value
+    
+export const { setCurrentUser, removeCurrentUser } = userSlice.actions
+export const currentUser = (state: RootState) => state.currentUser.userInfo
 
 export default userSlice.reducer

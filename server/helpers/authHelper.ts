@@ -1,6 +1,7 @@
 import express from 'express'
 import jwt from 'jsonwebtoken'
 import crypto from 'crypto'
+import { IUserForClient } from '../types/userTypes'
 
 interface IDecoded {
     userId: string,
@@ -8,29 +9,36 @@ interface IDecoded {
     exp: number
 }
 
+interface ITokenResponse  {
+    statusCode: number,
+    message: string,
+    currentUser: IUserForClient
+}
+
 const createToken = (userId: string) : string => {
     return jwt.sign({ userId }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRES_IN
     })
 }   
-        
-const createAndSendToken = (userId: string, res: express.Response, statusCode: number, message: string) : void => {
+
+const createAndSendToken = (userId: string, res: express.Response, tokenResponse: ITokenResponse) : void => {
     const token = createToken(userId)
 
     res.cookie("jwt", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-    })
-    .status(statusCode)
+    })  
+    .status(tokenResponse.statusCode)
     .json({
-        message,
-        token
+        status: 'success',
+        message: tokenResponse.message,
+        currentUser: tokenResponse.currentUser
     })
 }   
 
 const verifyToken = (token: string) : IDecoded  => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET) as IDecoded
-    
+
     return decoded
 }
     

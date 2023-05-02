@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import Home from './components/pages/Home'
 import Layout from './components/Layout'
 import ModalContainer from './components/modals/ModalContainer'
+import ToastContainer from './components/toasts/ToastContainer'
 
 function App() {
   return (
@@ -10,8 +11,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
         </Routes>
-      </Layout> 
-      <ModalContainer>hello</ModalContainer>
+      </Layout>
+      <ModalContainer />
+      <ToastContainer />
     </div>
   )
 }

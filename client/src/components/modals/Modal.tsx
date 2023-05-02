@@ -15,7 +15,8 @@ interface ModalProps {
     buttonAction: () => void,
     secondaryButtonLabel?: string,
     secondaryButtonAction?: () => void,
-    isLoading?: boolean
+    isLoading?: boolean,
+    buttonLabelOnLoading?: string
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -30,7 +31,8 @@ const Modal: React.FC<ModalProps> = ({
     buttonAction,
     secondaryButtonAction,
     secondaryButtonLabel,
-    isLoading
+    isLoading,
+    buttonLabelOnLoading,
 }) => { 
     const [show, setShow] = useState<boolean>(isOpen)
     
@@ -70,10 +72,11 @@ const Modal: React.FC<ModalProps> = ({
                         onClick={buttonAction}
                         type="submit"
                         disabled={isLoading}
+                        labelOnDisabled={buttonLabelOnLoading}
                     />  
-
+                    
                     {secondaryButtonLabel && secondaryButtonAction && (
-                        <Button     
+                        <Button         
                             label={secondaryButtonLabel}
                             onClick={secondaryButtonAction}
                             type="submit"

@@ -49,7 +49,7 @@ const errorController = async(error : AppError, req: Request, res: Response, nex
         let err = {...error}
         err.message = error.message
         err.code = error.code
-        error.name = error.name
+        err.name = error.name
         
         if (error.code === 11000) {
             err = handleDupliateErrorDB(err)

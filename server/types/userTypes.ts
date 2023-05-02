@@ -1,14 +1,31 @@
-export interface IUser {
+import mongoose from "mongoose"
+
+export interface IUser extends mongoose.Document {
     _id?: string,
     name: string,
     email: string,
     password?: string,
     favorites?: string[],
+    role: string | "user",
+    imageSrc?: string,
     location?: string,
-    role?: string | "user"
     active: boolean,
+    tasks?: any[] | null
     comparePassword?: (candidatePassword: string, password: string) => Promise<boolean>,
     createResetPasswordToken?: () => string,
+    passwordResetToken?: string,
+    passwordResetExpires?: Date,
+}
+
+export interface IUserForClient {
+    userId: string,
+    name: string,
+    email: string,
+    role: string,
+    imageSrc?: string,
+    favorites?: string[]
+    location?: string,
+    tasks?: any[]
 }
     
 export interface IGetUserAuthInfoRequest extends Request {

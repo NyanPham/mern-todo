@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 
 import { createResetPasswordToken, hashPassword, modifyUserAttributes, passwordChangedAfterTokenIssued } from '../middlewares/userMiddlewares'
+import { IUser } from '../types/userTypes'
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -41,7 +42,11 @@ const userSchema = new mongoose.Schema({
     role: {
         type: String,
         default: "user"
-    },
+    },  
+    imageSrc: {
+        type: String,
+        default: 'default.jpg'
+    },      
     location: String,
     passwordResetToken: String,
     passwordResetExpires: Date,
@@ -82,6 +87,6 @@ userSchema.methods.createResetPasswordToken = createResetPasswordToken
 userSchema.pre('save', hashPassword)
 userSchema.pre('save', modifyUserAttributes)
 
-const User = mongoose.model('User', userSchema)
+const User = mongoose.model<IUser>('User', userSchema)
 
 export default User

@@ -1,7 +1,7 @@
 import express from 'express'
 import crypto from 'crypto'
 import User from '../models/User'
-import { IGetUserAuthInfoRequest } from '../types/userTypes'
+import { IGetUserAuthInfoRequest, IUser, IUserForClient } from '../types/userTypes'
 import catchAsync from '../helpers/catchAsync'
 import { createAndSendToken, verifyToken } from '../helpers/authHelper'
 import sendMail, {  IMailerOptions } from '../helpers/mailSender'
@@ -31,12 +31,24 @@ export const register = catchAsync(async (req: express.Request, res: express.Res
         password,
         passwordConfirm
     })  
-
+    
     newUser.password = undefined
 
-    res.status(201).json({
-        status: 'success',
-        message: "You have registered successfully!"
+    const userForClient : IUserForClient = {
+        userId: newUser._id.toString(),
+        name: newUser.name,
+        email: newUser.email,
+        role: newUser.role,
+        imageSrc: newUser.imageSrc,
+        favorites: newUser.favorites.map(id => id.toString()) || [],
+        location: newUser.location || null,
+        tasks: newUser.tasks || []
+    } 
+        
+    createAndSendToken(newUser._id.toString(), res, { 
+        statusCode: 201, 
+        message: 'You have registered successfully!',
+        currentUser: userForClient
     })
 })
 
@@ -57,8 +69,23 @@ export const login = catchAsync(async (req: express.Request, res: express.Respon
     const correctPassword = await user.comparePassword(password, user.password)
 
     if (user == null || !correctPassword) throw new AppError("Invalid credentials", 400)
+    
+    const userForClient : IUserForClient = {
+        userId: user._id.toString(),
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        imageSrc: user.imageSrc,
+        favorites: user.favorites.map(id => id.toString()) || undefined,
+        location: user.location || null,
+        tasks: user.tasks || []
+    }
 
-    createAndSendToken(user._id.toString(), res, 200, 'Logged in successfully!')
+    createAndSendToken(user._id.toString(), res, { 
+        statusCode: 200, 
+        message: 'Logged in successfully!',
+        currentUser: userForClient
+    })
 })
 
 export const protect = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
