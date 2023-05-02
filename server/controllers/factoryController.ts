@@ -1,6 +1,7 @@
 import catchAsync from "../helpers/catchAsync"
 import express from 'express'
 import { IGetUserAuthInfoRequest } from "../types/userTypes"
+import AppError from "../errors/AppError"
 
 interface ITaskCreate {
     isAuthBased?: boolean | null,
@@ -51,7 +52,7 @@ export const getOne = (Model: Record<string, any>, populateOptions? : object) =>
 
     const data = await query.exec()
 
-    if (data ==null) throw new Error(`${Model} is not defined`)
+    if (data ==null) throw new AppError(`${Model} is not defined`, 400)
 
     res.status(200).json({
         status: 'success',
@@ -66,7 +67,7 @@ export const updateOne = (Model : Record<string, any>, unallowedFields? : string
     const contentKeys = Object.keys(content)
 
     if (unallowedFields && unallowedFields.some(field => contentKeys.includes(field))) {
-        throw new Error(`Fields of ${unallowedFields.join(', ')} cannot be updated`)
+        throw new AppError(`Fields of ${unallowedFields.join(', ')} cannot be updated`, 400)
     }
 
     // @ts-ignore
@@ -76,7 +77,7 @@ export const updateOne = (Model : Record<string, any>, unallowedFields? : string
         new: true,
     })
 
-    if (updatedData == null) throw new Error(`Failed to update ${Model}`)
+    if (updatedData == null) throw new AppError(`Failed to update ${Model}`, 400)
 
     res.status(200).json({
         status: 'success',
@@ -90,7 +91,7 @@ export const deleteOne = (Model: Record<string, any>) => catchAsync(async (req: 
     const { id } = req.params 
 
     await Model.findByIdAndDelete(id)
-
+    
     res.status(204).json({
         status: 'success',
         data: null

@@ -13,6 +13,8 @@ import userRouter from './routes/userRouter'
 import authRouter from './routes/authRouter'
 import taskRouter from './routes/taskRouter'
 import meRouter from './routes/meRouter'
+    
+import errorController from './controllers/errorController'
 
 const app = express()
 
@@ -53,5 +55,7 @@ app.use('/api/v1/users', userRouter)
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/me', meRouter)
 app.use('/api/v1/tasks', taskRouter)
+
+app.use('*', errorController)
 
 export default app

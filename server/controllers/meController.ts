@@ -3,12 +3,13 @@ import Task from "../models/Task"
 import catchAsync from "../helpers/catchAsync"
 import { Response } from "express"
 import { IGetUserAuthInfoRequest, ITaskToUpdate } from "../types/userTypes"
+import AppError from "../errors/AppError"
 
 export const getMyTasks = catchAsync(async(req: IGetUserAuthInfoRequest, res: Response) => {
     const tasks = await Task.find({
         userId: req.currentUser._id
     })
-
+    
     res.status(200).json({
         status: 'success',
         results: tasks.length,
@@ -39,7 +40,7 @@ export const getMyTask = catchAsync(async(req: IGetUserAuthInfoRequest, res: Res
         userId: req.currentUser._id
     })
 
-    if (task == null) throw new Error("No task found!")
+    if (task == null) throw new AppError("No task found!", 400)
 
     res.status(200).json({
         status: 'success',
