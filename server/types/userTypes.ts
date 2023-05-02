@@ -47,4 +47,11 @@ export interface ITaskToUpdate {
     isComplete?: boolean,
     imageSrc?: boolean,
     userId?: string | number | null
+}   
+    
+export interface ICategoryToUpdate {
+    title?: string,
+    subtitle?: string,
+    imageSrc?: boolean,
+    userId?: string | number | null
 }

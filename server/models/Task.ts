@@ -1,34 +1,39 @@
-import mongoose from "mongoose"
+import mongoose from 'mongoose'
 
 const taskSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: true,
+    },
+    categoryId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
+        required: true,
     },
     title: {
         type: String,
         required: true,
-    }, 
+    },
     subtitle: String,
     isComplete: {
         type: Boolean,
-        default: false
-    },      
+        default: false,
+    },
     imageSrc: {
         type: String,
-        default: "default.png"
+        default: 'default.png',
     },
     createdAt: {
         type: Date,
-        default: Date.now()
+        default: Date.now(),
     },
     modifiedAt: {
         type: Date,
-        default: Date.now()
-    }
+        default: Date.now(),
+    },
 })
 
-const Task = mongoose.model("Task", taskSchema)
+const Task = mongoose.model('Task', taskSchema)
 
 export default Task
