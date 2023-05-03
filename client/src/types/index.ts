@@ -39,6 +39,7 @@ export interface Task {
     isComplete: boolean
     createdAt: Date
     modifiedAt: Date
+    dueDate?: Date
 }
 
 export interface Category {
@@ -71,7 +72,7 @@ export interface InputProps {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
     onError?: () => void
     onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void
-    validate?: (value: any) => InputValidateResult
+    validate?: (value: any) => InputValidateResult | void
     small?: boolean
     bgTransparent?: boolean
     underlineOnly?: boolean
@@ -106,4 +107,36 @@ export interface TaskToToggle {
 export interface ToggleTaskData {
     taskId: string
     isComplete: boolean
+}
+
+export interface DeleteTaskData {
+    taskId: string
+}
+
+export interface UpdateTaskData {
+    taskId: string
+    title: string
+    subtitle?: string
+    dueDate?: Date
+}
+
+export interface TaskToUpdate {
+    title: string
+    subtitle?: string
+    dueDate?: Date
+}
+
+export interface DeleteCategoryData {
+    categoryId: string
+}
+
+export interface UpdateCategoryData {
+    categoryId: string
+    title: string
+    description?: string
+}
+
+export interface CategoryToUpdate {
+    title: string
+    description?: string
 }

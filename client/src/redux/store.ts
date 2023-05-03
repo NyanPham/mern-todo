@@ -5,6 +5,8 @@ import userSlice from './userSlice'
 import toastSlice from './toastSlice'
 import categorySlice from './categorySlice'
 import taskSlice from './taskSlice'
+import editTaskModalSlice from './editTaskModalSlice'
+import editCategoryModalSlice from './editCategoryModalSlice'
 
 export const store = configureStore({
     reducer: {
@@ -14,6 +16,8 @@ export const store = configureStore({
         toast: toastSlice,
         category: categorySlice,
         task: taskSlice,
+        editTaskModal: editTaskModalSlice,
+        editCategoryModal: editCategoryModalSlice,
     },
 })
 

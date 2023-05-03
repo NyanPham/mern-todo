@@ -1,9 +1,9 @@
 import { useState, useCallback } from 'react'
-import Button from "../buttons/Button"
-import { Input } from "../inputs/Input"
-import Modal from "./Modal"
-import { AcademicCapIcon } from "@heroicons/react/24/solid"
-import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks"
+import Button from '../buttons/Button'
+import { Input } from '../inputs/Input'
+import Modal from './Modal'
+import { AcademicCapIcon } from '@heroicons/react/24/solid'
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks'
 import { open, close, signUp, RegisterModalState } from '../../redux/registerModalSlice'
 import { setToastInfo, open as openToast } from '../../redux/toastSlice'
 import { RegisterData } from '../../types'
@@ -11,21 +11,24 @@ import useForm from '../../hooks/useForm'
 import { setCurrentUser } from '../../redux/userSlice'
 
 const RegisterModal = () => {
-    const { isOpen, isLoading }  = useAppSelector<RegisterModalState>(state => state.registerModal)
+    const { isOpen, isLoading } = useAppSelector<RegisterModalState>((state) => state.registerModal)
     const dispatch = useAppDispatch()
     const onClose = () => dispatch(close())
     const onOpen = () => dispatch(open())
 
-    const { form, onFormChange, validateIfEmpty } = useForm<RegisterData>({
-        name: "",
-        email: "",
-        password: "",
-        passwordConfirm: ""
-    })
+    const { form, onFormChange, validateIfEmpty } = useForm<RegisterData>(
+        {
+            name: '',
+            email: '',
+            password: '',
+            passwordConfirm: '',
+        },
+        []
+    )
 
     const bodyContent = (
         <div className="flex flex-col gap-3">
-            <Input 
+            <Input
                 id="name"
                 type="text"
                 name="name"
@@ -35,8 +38,8 @@ const RegisterModal = () => {
                 required={true}
                 onChange={onFormChange}
                 validate={validateIfEmpty}
-            />  
-            <Input 
+            />
+            <Input
                 id="email"
                 type="email"
                 name="email"
@@ -46,8 +49,8 @@ const RegisterModal = () => {
                 required={true}
                 onChange={onFormChange}
                 validate={validateIfEmpty}
-            />      
-            <Input 
+            />
+            <Input
                 id="password"
                 type="password"
                 name="password"
@@ -57,62 +60,61 @@ const RegisterModal = () => {
                 value={form.password}
                 onChange={onFormChange}
                 validate={validateIfEmpty}
-            />       
-            <Input  
+            />
+            <Input
                 id="passwordConfirm"
                 type="password"
                 name="passwordConfirm"
                 label="Confirm Password"
-                disabled={false}    
+                disabled={false}
                 required={true}
                 value={form.passwordConfirm}
                 onChange={onFormChange}
                 validate={validateIfEmpty}
             />
         </div>
-    )   
+    )
 
     const footerContent = (
         <>
             <hr />
-                <div className="flex flex-col gap-3">
-                    <Button 
-                        label="Login with Google"
-                        onClick={() => {}}
-                        outline
-                        icon={AcademicCapIcon}
-                    />
-                </div>
+            <div className="flex flex-col gap-3">
+                <Button label="Login with Google" onClick={() => {}} outline icon={AcademicCapIcon} />
+            </div>
             <hr />
         </>
-    )       
-        
+    )
+
     const handleRegister = useCallback(async () => {
-        const { payload } : { payload: any} = await dispatch(signUp(form))
+        const { payload }: { payload: any } = await dispatch(signUp(form))
 
         if (payload.status === 'success') {
-            dispatch(setToastInfo({
-                title: 'Success',
-                subtitle: payload.message,
-                type: 'success'
-            }))
+            dispatch(
+                setToastInfo({
+                    title: 'Success',
+                    subtitle: payload.message,
+                    type: 'success',
+                })
+            )
 
             dispatch(openToast())
             dispatch(setCurrentUser(payload.currentUser))
             dispatch(close())
-            return 
-        }   
+            return
+        }
 
-        dispatch(setToastInfo({
-            title: 'Error',
-            subtitle: payload.message,
-            type: 'error'
-        })) 
+        dispatch(
+            setToastInfo({
+                title: 'Error',
+                subtitle: payload.message,
+                type: 'error',
+            })
+        )
         dispatch(openToast())
     }, [dispatch, signUp, form, openToast, setToastInfo, setCurrentUser])
 
     return (
-        <Modal 
+        <Modal
             isLoading={isLoading}
             isOpen={isOpen}
             title="Register"

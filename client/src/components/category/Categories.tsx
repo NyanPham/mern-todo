@@ -4,7 +4,7 @@ import InputWithPlus from '../inputs/InputWithPlus'
 import Category from './Category'
 import { useAppSelector, useAppDispatch } from '../../hooks/reduxHooks'
 import { open as openToast, setToastInfo } from '../../redux/toastSlice'
-import { createCategory, removeCategories, selectCategory, setCategoriesFromUser } from '../../redux/categorySlice'
+import { createCategoryAsync, removeCategories, selectCategory, setCategoriesFromUser } from '../../redux/categorySlice'
 
 const Categories = () => {
     const currentUser = useAppSelector((state) => state.currentUser.userInfo)
@@ -40,7 +40,7 @@ const Categories = () => {
             return
         }
 
-        dispatch(createCategory({ title: categoryText }))
+        dispatch(createCategoryAsync({ title: categoryText }))
         setCategoryText('')
     }
 

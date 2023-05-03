@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit'
 import type { RootState } from './store'
-import { CategoryData, ResponseData } from '../types'
+import { CategoryData, CategoryToUpdate, DeleteCategoryData, ResponseData, UpdateCategoryData } from '../types'
 
-export const createCategory = createAsyncThunk('categories/create', async (body: CategoryData, thunkApi) => {
+export const createCategoryAsync = createAsyncThunk('categories/create', async (body: CategoryData) => {
     const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/v1/me/myCategories`, {
         method: 'POST',
         headers: {
@@ -17,9 +17,44 @@ export const createCategory = createAsyncThunk('categories/create', async (body:
     return data
 })
 
+export const deleteCategoryAsync = createAsyncThunk('categories/deleteCategory', async (body: DeleteCategoryData) => {
+    const url = `${import.meta.env.VITE_SERVER_URL}/api/v1/me/myCategories/${body.categoryId}`
+    const res = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    })
+
+    const data: ResponseData = await res.json()
+    return data
+})
+
+export const updateCategoryAsync = createAsyncThunk('categoryies/updateCategory', async (body: UpdateCategoryData) => {
+    const url = `${import.meta.env.VITE_SERVER_URL}/api/v1/me/myCategories/${body.categoryId}`
+
+    const categoryToUpdate: CategoryToUpdate = {
+        title: body.title,
+        description: body.description,
+    }
+
+    const res = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(categoryToUpdate),
+    })
+
+    const data: ResponseData = await res.json()
+    return data
+})
+
 interface CategoryState {
     categories: any[]
-    currentCatgoryId: string | null
+    currentCategoryId: string
     isLoading: boolean
     error: string | null | undefined
     message: string | null
@@ -27,7 +62,7 @@ interface CategoryState {
 
 const initialState: CategoryState = {
     categories: [],
-    currentCatgoryId: null,
+    currentCategoryId: '',
     isLoading: false,
     error: '',
     message: '',
@@ -43,43 +78,97 @@ export const categorySlice = createSlice({
         setCategoriesFromUser: (state, { payload }) => {
             state.categories = payload.categories
 
-            if (state.currentCatgoryId && state.categories.some((category) => category._id === state.currentCatgoryId))
+            if (
+                state.currentCategoryId &&
+                state.categories.some((category) => category._id === state.currentCategoryId)
+            )
                 return
 
-            state.currentCatgoryId = state.categories[0]._id
+            state.currentCategoryId = state.categories[0]._id
         },
         removeCategories: (state) => {
             state.categories = []
         },
         selectCategory: (state, { payload }) => {
-            state.currentCatgoryId = payload.categoryId
+            state.currentCategoryId = payload.categoryId
+        },
+        removeCategory: (state, { payload }) => {
+            state.categories = state.categories.filter((category) => category._id !== payload.categoryId)
+        },
+        updateCategory: (state, { payload }) => {
+            const category = state.categories.find((category) => category._id === payload.categoryId)
+            if (category == null) return
+
+            category.title = payload.title
+            category.description = payload.description
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(createCategory.pending, (state) => {
+        builder.addCase(createCategoryAsync.pending, (state) => {
             state.isLoading = true
             state.error = ''
             state.message = ''
         })
-        builder.addCase(createCategory.fulfilled, (state, { payload }) => {
+        builder.addCase(createCategoryAsync.fulfilled, (state, { payload }) => {
             state.isLoading = false
 
             if (payload.status === 'success') {
                 state.categories.push(payload.data.data)
-                state.currentCatgoryId = payload.data.data._id
+                state.currentCategoryId = payload.data.data._id
             } else {
                 state.error = payload.message
             }
         })
-        builder.addCase(createCategory.rejected, (state) => {
+        builder.addCase(createCategoryAsync.rejected, (state) => {
             state.isLoading = false
 
             state.error = 'Something went so wrong!'
         })
+        builder.addCase(deleteCategoryAsync.pending, (state) => {
+            state.isLoading = true
+            state.error = ''
+            state.message = ''
+        })
+        builder.addCase(deleteCategoryAsync.fulfilled, (state, { payload }) => {
+            state.isLoading = false
+
+            if (payload.status === 'success') {
+                console.log(payload.data.data)
+            } else {
+                state.error = payload.message
+            }
+        })
+        builder.addCase(deleteCategoryAsync.rejected, (state) => {
+            state.isLoading = false
+            state.error = 'Something went wrong when deleting the category'
+        })
+        builder.addCase(updateCategoryAsync.pending, (state) => {
+            state.isLoading = true
+            state.error = ''
+            state.message = ''
+        })
+        builder.addCase(updateCategoryAsync.fulfilled, (state, { payload }) => {
+            state.isLoading = false
+
+            if (payload.status === 'success') {
+                const category = state.categories.find((category) => category._id === payload.data.data._id)
+                if (category == null) return
+
+                category.title = payload.data.data.title
+                category.description = payload.data.data.description
+            } else {
+                state.error = payload.message
+            }
+        })
+        builder.addCase(updateCategoryAsync.rejected, (state) => {
+            state.isLoading = false
+            state.error = 'Something went wrong when updating the category'
+        })
     },
 })
-export const { setCategoriesFromUser, removeCategories, selectCategory } = categorySlice.actions
+export const { setCategoriesFromUser, removeCategories, selectCategory, updateCategory, removeCategory } =
+    categorySlice.actions
 export const categories = (state: RootState) => state.category.categories
-export const currentCategoryId = (state: RootState) => state.category.currentCatgoryId
+export const currentCategoryId = (state: RootState) => state.category.currentCategoryId
 
 export default categorySlice.reducer

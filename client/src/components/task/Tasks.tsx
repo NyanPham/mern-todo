@@ -4,16 +4,15 @@ import Heading from '../Heading'
 import InputWithPlus from '../inputs/InputWithPlus'
 import Task from './Task'
 import { setToastInfo, open as openToast } from '../../redux/toastSlice'
-import { createTask, removeTasks, setTasksFromUsers } from '../../redux/taskSlice'
+import { createTaskAsync, removeTasks, setTasksFromUsers } from '../../redux/taskSlice'
+import CategoryButtons from '../category/CategoryButtons'
+import CategoryHeading from '../category/CategoryHeading'
 
 const Tasks = () => {
     const currentUser = useAppSelector((state) => state.currentUser.userInfo)
     const tasks = useAppSelector((state) => state.task.tasks)
     // const currentTaskId = useAppSelector((state) => state.task.currentTaskId)
-    const currentCategoryId = useAppSelector((state) => state.category.currentCatgoryId)
-    const categories = useAppSelector((state) => state.category.categories)
-
-    const currentCategory = categories.find((category) => category._id === currentCategoryId)
+    const currentCategoryId = useAppSelector((state) => state.category.currentCategoryId)
 
     const tasksInCategory = tasks.filter((task) => task.categoryId === currentCategoryId)
 
@@ -48,15 +47,13 @@ const Tasks = () => {
             return
         }
 
-        dispatch(createTask({ title: taskText, categoryId: currentCategoryId }))
+        dispatch(createTaskAsync({ title: taskText, categoryId: currentCategoryId }))
         setTaskText('')
     }
 
     return (
         <div className="w-3/5 bg-white/20 rounded-lg backdrop-blur-lg shadow-white">
-            <div className="p-4">
-                <Heading title={currentCategory?.title || 'Tasks'} subtitle={currentCategory?.description || null} />
-            </div>
+            <CategoryHeading />
             <hr />
             <div className="max-h-96 overflow-y-auto">
                 {currentUser &&
