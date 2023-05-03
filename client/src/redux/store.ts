@@ -3,14 +3,18 @@ import registerModalSlice from './registerModalSlice'
 import loginModalSlice from './loginModalSlice'
 import userSlice from './userSlice'
 import toastSlice from './toastSlice'
-  
+import categorySlice from './categorySlice'
+import taskSlice from './taskSlice'
+
 export const store = configureStore({
-  reducer: {
-    registerModal: registerModalSlice,
-    loginModal: loginModalSlice,
-    currentUser: userSlice,
-    toast: toastSlice
-  },
+    reducer: {
+        registerModal: registerModalSlice,
+        loginModal: loginModalSlice,
+        currentUser: userSlice,
+        toast: toastSlice,
+        category: categorySlice,
+        task: taskSlice,
+    },
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

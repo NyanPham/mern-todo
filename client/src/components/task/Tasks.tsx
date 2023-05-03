@@ -1,0 +1,96 @@
+import { useState, useEffect } from 'react'
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks'
+import Heading from '../Heading'
+import InputWithPlus from '../inputs/InputWithPlus'
+import Task from './Task'
+import { setToastInfo, open as openToast } from '../../redux/toastSlice'
+import { createTask, removeTasks, setTasksFromUsers } from '../../redux/taskSlice'
+
+const Tasks = () => {
+    const currentUser = useAppSelector((state) => state.currentUser.userInfo)
+    const tasks = useAppSelector((state) => state.task.tasks)
+    // const currentTaskId = useAppSelector((state) => state.task.currentTaskId)
+    const currentCategoryId = useAppSelector((state) => state.category.currentCatgoryId)
+    const categories = useAppSelector((state) => state.category.categories)
+
+    const currentCategory = categories.find((category) => category._id === currentCategoryId)
+
+    const tasksInCategory = tasks.filter((task) => task.categoryId === currentCategoryId)
+
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        if (currentUser == null) {
+            dispatch(removeTasks())
+            return
+        }
+
+        dispatch(setTasksFromUsers({ tasks: currentUser.tasks }))
+    }, [currentUser, dispatch, removeTasks, setTasksFromUsers])
+
+    const [taskText, setTaskText] = useState<string>('')
+
+    function onTaskTextChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setTaskText(e.target.value)
+    }
+
+    function onPlusIconClick() {
+        if (currentUser == null) {
+            dispatch(
+                setToastInfo({
+                    title: 'Sorry',
+                    subtitle: 'You have not logged in yet!',
+                    type: 'error',
+                })
+            )
+
+            dispatch(openToast())
+            return
+        }
+
+        dispatch(createTask({ title: taskText, categoryId: currentCategoryId }))
+        setTaskText('')
+    }
+
+    return (
+        <div className="w-3/5 bg-white/20 rounded-lg backdrop-blur-lg shadow-white">
+            <div className="p-4">
+                <Heading title={currentCategory?.title || 'Tasks'} subtitle={currentCategory?.description || null} />
+            </div>
+            <hr />
+            <div className="max-h-96 overflow-y-auto">
+                {currentUser &&
+                    tasksInCategory?.length &&
+                    tasksInCategory.map((task) => (
+                        <Task
+                            key={task._id}
+                            id={task._id}
+                            title={task.title}
+                            subtitle={task.subtitle}
+                            isComplete={task.isComplete}
+                            categoryId={task.categoryId}
+                        />
+                    ))}
+            </div>
+            <hr />
+            <div className="p-4">
+                <InputWithPlus
+                    id="add-task"
+                    type="task"
+                    name="task"
+                    label="Add task"
+                    value={taskText}
+                    required={true}
+                    disabled={false}
+                    onChange={onTaskTextChange}
+                    small
+                    underlineOnly
+                    bgTransparent
+                    onPlusIconClick={onPlusIconClick}
+                />
+            </div>
+        </div>
+    )
+}
+
+export default Tasks

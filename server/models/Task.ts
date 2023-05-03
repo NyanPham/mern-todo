@@ -32,6 +32,7 @@ const taskSchema = new mongoose.Schema({
         type: Date,
         default: Date.now(),
     },
+    dueDate: Date,
 })
 
 const Task = mongoose.model('Task', taskSchema)
