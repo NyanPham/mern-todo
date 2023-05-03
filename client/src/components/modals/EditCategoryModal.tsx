@@ -23,7 +23,7 @@ const EditCategoryModal = () => {
         },
         [currentCategory]
     )
-        
+
     const onClose = useCallback(() => {
         dispatch(closeCategoryModal())
     }, [])

@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks'
-import Heading from '../Heading'
 import InputWithPlus from '../inputs/InputWithPlus'
 import Task from './Task'
 import { setToastInfo, open as openToast } from '../../redux/toastSlice'
 import { createTaskAsync, removeTasks, setTasksFromUsers } from '../../redux/taskSlice'
-import CategoryButtons from '../category/CategoryButtons'
 import CategoryHeading from '../category/CategoryHeading'
 
 const Tasks = () => {
@@ -55,20 +53,26 @@ const Tasks = () => {
         <div className="w-3/5 bg-white/20 rounded-lg backdrop-blur-lg shadow-white">
             <CategoryHeading />
             <hr />
-            <div className="max-h-96 overflow-y-auto">
-                {currentUser &&
-                    tasksInCategory?.length &&
-                    tasksInCategory.map((task) => (
-                        <Task
-                            key={task._id}
-                            id={task._id}
-                            title={task.title}
-                            subtitle={task.subtitle}
-                            isComplete={task.isComplete}
-                            categoryId={task.categoryId}
-                        />
-                    ))}
-            </div>
+            {currentCategoryId ? (
+                <div className="max-h-96 overflow-y-auto">
+                    {currentUser && tasksInCategory?.length ? (
+                        tasksInCategory.map((task) => (
+                            <Task
+                                key={task._id}
+                                id={task._id}
+                                title={task.title}
+                                subtitle={task.subtitle}
+                                isComplete={task.isComplete}
+                                categoryId={task.categoryId}
+                            />
+                        ))
+                    ) : (
+                        <h3 className="p-4 text-rose-700 bg-rose-300">You have no tasks in this category. Add one!</h3>
+                    )}
+                </div>
+            ) : (
+                <h3 className="p-4 text-rose-700 bg-rose-300">Please select a category on the left.</h3>
+            )}
             <hr />
             <div className="p-4">
                 <InputWithPlus

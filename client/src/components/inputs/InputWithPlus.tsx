@@ -7,7 +7,7 @@ type InputWithPlusProps = InputProps & InputPlusProps
 const InputWithPlus: React.FC<InputWithPlusProps> = (props) => {
     return (
         <div className="flex flex-row items-center">
-            <PlusSmallIcon className="h-5 w-5" onClick={props.onPlusIconClick} />
+            <PlusSmallIcon className="h-5 w-5 text-white font-bold cursor-pointer" onClick={props.onPlusIconClick} />
             <Input {...props} />
         </div>
     )

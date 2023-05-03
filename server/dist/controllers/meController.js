@@ -60,7 +60,7 @@ exports.updateMyTask = (0, catchAsync_1.default)(async (req, res) => {
     if (taskToUpdate.userId != null) {
         delete taskToUpdate.userId
     }
-    console.log(taskToUpdate)
+
     const updatedTask = await Task_1.default.findOneAndUpdate(
         {
             _id: id,

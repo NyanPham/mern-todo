@@ -7,7 +7,7 @@ interface DeleteButtonProps {
 const DeleteButton: React.FC<DeleteButtonProps> = ({ onDelete }) => {
     return (
         <button
-            className="w-6 h-6 transition duration-200 rounded-md flex items-center justify-center hover:-translate-y-1 hover:shadow-md hover:bg-rose-300/70 hover:text-rose-700 "
+            className="w-6 h-6 transition duration-200 rounded-md flex items-center justify-center hover:-translate-y-1 hover:shadow-md hover:bg-rose-300 hover:text-rose-700 "
             type="button"
             onClick={onDelete}
         >

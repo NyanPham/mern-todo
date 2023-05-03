@@ -1,4 +1,4 @@
-import { PencilIcon, TrashIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import EditButton from '../buttons/EditButton'
 import DeleteButton from '../buttons/DeleteButton'
 
@@ -16,8 +16,8 @@ const TaskButtons: React.FC<TaskButtonsProps> = ({ isComplete, onToggleComplete,
                 className={`w-6 h-6 transition duration-200 rounded-md flex items-center justify-center hover:-translate-y-1 hover:shadow-md
                     ${
                         isComplete
-                            ? 'hover:bg-yellow-200/60 hover:text-yellow-600 peer-hover:bg-yellow-200/60 peer-hover:text-yellow-600'
-                            : 'hover:bg-green-300/90 hover:text-green-600'
+                            ? 'hover:bg-yellow-200 hover:text-yellow-600 peer-hover:bg-yellow-200/60 peer-hover:text-yellow-600'
+                            : 'hover:bg-green-300 hover:text-green-600'
                     }
                 `}
                 type="button"

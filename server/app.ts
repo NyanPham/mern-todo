@@ -23,19 +23,25 @@ const app = express()
 app.use(helmet())
 app.use(
     cors({
-        origin: ['http:localhost:3000', 'http://localhost:5173'],
+        origin: ['http://localhost:5173', 'https://mern-todo-client-dun.vercel.app'],
         credentials: true,
     })
 )
 app.options(
     '*',
     cors({
-        origin: ['http:localhost:3000', 'http://localhost:5173'],
+        origin: ['http://localhost:5173', 'https://mern-todo-client-dun.vercel.app'],
         credentials: true,
     })
 )
+
+app.options('*', function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', 'https://mern-todo-client-dun.vercel.app')
+    next()
+})
+
 const limiter = rateLimit({
-    max: 300,
+    max: 1000,
     windowMs: 60 * 24 * 60 * 1000,
     message: 'You have reached the access quota limit of 300. Please wait for quota to reset',
 })

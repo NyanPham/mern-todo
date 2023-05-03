@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useCallback } from 'react'
 import Button from '../buttons/Button'
 import { Input } from '../inputs/Input'
 import Modal from './Modal'

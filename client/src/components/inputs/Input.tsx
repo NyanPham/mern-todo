@@ -24,8 +24,9 @@ export const Input: React.FC<InputProps> = ({
         if (validate == null) return
         if (typeof validate !== 'function') return
 
-        const validateResult: InputValidateResult = validate(value)
-        setError(validateResult.message)
+        const validateResult: InputValidateResult | void = validate(value)
+
+        if (validateResult) setError(validateResult.message)
     }, [value, validate])
 
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -43,7 +44,7 @@ export const Input: React.FC<InputProps> = ({
                     ${small ? 'py-1 px-3' : 'py-3 px-5'}
                     ${
                         underlineOnly
-                            ? 'border-b border-b-cyan-500 focus:border-b-2 focus:ring-0'
+                            ? 'focus:ring-0 relative before:content-[""] before:fixed before:block before:top-full before:left-0 before:bg-white before:w-full before:h-0.5 before:origin-right before:scale-x-0 focus:before:scale-x-100'
                             : 'border rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2'
                     }       
                     ${bgTransparent ? 'bg-transparent text-white placeholder:text-white' : 'bg-white/70 text-gray-800'}

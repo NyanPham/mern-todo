@@ -7,7 +7,7 @@ interface EditButtonProps {
 const EditButton: React.FC<EditButtonProps> = ({ onOpenEditModal }) => {
     return (
         <button
-            className="w-6 h-6 transition duration-200 rounded-md flex items-center justify-center hover:-translate-y-1 hover:shadow-md hover:bg-cyan-300/70 hover:text-cyan-700"
+            className="w-6 h-6 transition duration-200 rounded-md flex items-center justify-center hover:-translate-y-1 hover:shadow-md hover:bg-cyan-300 hover:text-cyan-700"
             type="button"
             onClick={onOpenEditModal}
         >

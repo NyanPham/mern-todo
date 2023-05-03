@@ -24,7 +24,6 @@ const Modal: React.FC<ModalProps> = ({
     title,
     subtitle,
     onClose,
-    onOpen,
     body,
     footer,
     buttonLabel,

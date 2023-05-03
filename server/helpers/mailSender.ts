@@ -1,42 +1,33 @@
 import nodemailer from 'nodemailer'
 
 export interface IMailerOptions {
-    from: string,
-    to: string,
-    subject: string,
-    message: string,
-    html?: string, 
+    from: string
+    to: string
+    subject: string
+    message: string
+    html?: string
     headers?: object
 }
 
-const sendMail = async ({
-    from,
-    to,
-    subject,
-    message,
-    html,
-    headers
-}  : IMailerOptions) => {
-
+const sendMail = async ({ from, to, subject, message, html, headers }: IMailerOptions) => {
     const options = {
-        from, 
-        to, 
+        from,
+        to,
         subject,
-        text: message
-    }   
+        text: message,
+    }
 
     const transporter = nodemailer.createTransport({
         //@ts-ignore
         host: process.env.MAILER_HOST,
         port: process.env.MAILER_PORT,
-        auth: { 
+        auth: {
             user: process.env.MAILER_USERNAME,
-            pass: process.env.MAILER_PASSWORD
+            pass: process.env.MAILER_PASSWORD,
         },
     })
 
     const info = await transporter.sendMail(options)
-    console.log("Message sent: %s", info.response);
 }
 
 export default sendMail

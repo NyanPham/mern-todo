@@ -23,7 +23,7 @@ const CategoryHeading = () => {
     return (
         <div className="p-4 flex flex-row items-center justify-between">
             <Heading title={currentCategory?.title || 'Tasks'} subtitle={currentCategory?.description || null} />
-            <CategoryButtons onOpenEdit={handleOpenEdit} onDelete={handleDeleteCategory} />
+            {currentCategory && <CategoryButtons onOpenEdit={handleOpenEdit} onDelete={handleDeleteCategory} />}
         </div>
     )
 }

@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { RootState } from './store'
 import { CategoryData, CategoryToUpdate, DeleteCategoryData, ResponseData, UpdateCategoryData } from '../types'
 
@@ -133,7 +133,7 @@ export const categorySlice = createSlice({
             state.isLoading = false
 
             if (payload.status === 'success') {
-                console.log(payload.data.data)
+                // console.log(payload.data.data)
             } else {
                 state.error = payload.message
             }

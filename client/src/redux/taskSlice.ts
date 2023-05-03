@@ -77,8 +77,6 @@ export const updateTaskAsync = createAsyncThunk('tasks/updateTask', async (body:
     })
 
     const data: ResponseData = await res.json()
-    console.log(data)
-    console.log(taskToUpdate)
     return data
 })
 
@@ -126,8 +124,6 @@ export const taskSlice = createSlice({
             task.title = payload.title
             task.subtitle = payload.subtitle
             task.dueDate = payload.dueDate
-
-            console.log(task)
         },
         setCurrentTaskId: (state, { payload }) => {
             state.currentTaskId = payload.taskId
@@ -162,7 +158,7 @@ export const taskSlice = createSlice({
             state.isLoading = false
 
             if (payload.status === 'success') {
-                console.log(payload.data.data)
+                // console.log(payload.data.data)
             } else {
                 state.error = payload.message
             }
@@ -180,7 +176,7 @@ export const taskSlice = createSlice({
             state.isLoading = false
 
             if (payload.status === 'success') {
-                console.log(payload.data.data)
+                // console.log(payload.data.data)
             } else {
                 state.error = payload.message
             }

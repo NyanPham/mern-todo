@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useAppDispatch } from '../../hooks/reduxHooks'
 import {
     deleteTaskAsync,
@@ -21,7 +21,7 @@ interface Task {
     modifiedAt?: Date
 }
 
-const Task: React.FC<Task> = ({ title, id, subtitle, categoryId, isComplete, imageSrc, createdAt, modifiedAt }) => {
+const Task: React.FC<Task> = ({ title, id, isComplete }) => {
     const dispatch = useAppDispatch()
 
     function handleToggleComplete() {

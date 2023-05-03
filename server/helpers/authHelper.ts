@@ -4,45 +4,46 @@ import crypto from 'crypto'
 import { IUserForClient } from '../types/userTypes'
 
 interface IDecoded {
-    userId: string,
-    iat: number,
+    userId: string
+    iat: number
     exp: number
 }
 
-interface ITokenResponse  {
-    statusCode: number,
-    message: string,
+interface ITokenResponse {
+    statusCode: number
+    message: string
     currentUser: IUserForClient
 }
 
-const createToken = (userId: string) : string => {
+const createToken = (userId: string): string => {
     return jwt.sign({ userId }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_IN
+        expiresIn: process.env.JWT_EXPIRES_IN,
     })
-}   
+}
 
-const createAndSendToken = (userId: string, res: express.Response, tokenResponse: ITokenResponse) : void => {
+const createAndSendToken = (userId: string, res: express.Response, tokenResponse: ITokenResponse): void => {
     const token = createToken(userId)
 
-    res.cookie("jwt", token, {
+    res.cookie('jwt', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-    })  
-    .status(tokenResponse.statusCode)
-    .json({
-        status: 'success',
-        message: tokenResponse.message,
-        currentUser: tokenResponse.currentUser
+        sameSite: 'none',
     })
-}   
+        .status(tokenResponse.statusCode)
+        .json({
+            status: 'success',
+            message: tokenResponse.message,
+            currentUser: tokenResponse.currentUser,
+        })
+}
 
-const verifyToken = (token: string) : IDecoded  => {
+const verifyToken = (token: string): IDecoded => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET) as IDecoded
 
     return decoded
 }
-    
-const encryptResetToken = (token: string) : string => {
+
+const encryptResetToken = (token: string): string => {
     return crypto.createHash('sha256').update(token).digest('hex')
 }
 

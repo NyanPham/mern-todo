@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import Heading from '../Heading'
 import InputWithPlus from '../inputs/InputWithPlus'
 import Category from './Category'
@@ -9,6 +9,7 @@ import { createCategoryAsync, removeCategories, selectCategory, setCategoriesFro
 const Categories = () => {
     const currentUser = useAppSelector((state) => state.currentUser.userInfo)
     const categories = useAppSelector((state) => state.category.categories)
+    const currentCategoryId = useAppSelector((state) => state.category.currentCategoryId)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
@@ -54,7 +55,7 @@ const Categories = () => {
                 <Heading title="List" subtitle="Task Categories" />
             </div>
             <hr />
-            <div className="p-4 max-h-96 overflow-y-auto">
+            <div className="max-h-96 overflow-y-auto transition-all duration-250">
                 {currentUser &&
                     categories &&
                     categories.map((category) => (
@@ -63,6 +64,7 @@ const Categories = () => {
                             title={category.title}
                             id={category._id}
                             onClick={handleCategoryClick}
+                            isSelected={currentCategoryId === category._id}
                         />
                     ))}
             </div>
