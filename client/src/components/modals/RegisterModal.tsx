@@ -12,6 +12,7 @@ import { setCurrentUser } from '../../redux/userSlice'
 
 const RegisterModal = () => {
     const { isOpen, isLoading } = useAppSelector<RegisterModalState>((state) => state.registerModal)
+
     const dispatch = useAppDispatch()
     const onClose = () => dispatch(close())
     const onOpen = () => dispatch(open())

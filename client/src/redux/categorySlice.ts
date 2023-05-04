@@ -80,11 +80,14 @@ export const categorySlice = createSlice({
 
             if (
                 state.currentCategoryId &&
-                state.categories.some((category) => category._id === state.currentCategoryId)
-            )
+                state.categories?.some((category) => category._id === state.currentCategoryId)
+            ) {
                 return
+            }
 
-            state.currentCategoryId = state.categories[0]._id
+            if (state.categories.length > 0) {
+                state.currentCategoryId = state.categories[0]._id
+            }
         },
         removeCategories: (state) => {
             state.categories = []

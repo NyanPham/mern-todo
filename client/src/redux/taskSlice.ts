@@ -104,7 +104,9 @@ export const taskSlice = createSlice({
             state.tasks = payload.tasks
 
             if (state.currentTaskId && state.tasks.some((task) => task._id === state.currentTaskId)) return
-            state.currentTaskId = state.tasks[0]._id
+            if (state.tasks.length > 0) {
+                state.currentTaskId = state.tasks[0]._id
+            }
         },
         removeTasks: (state) => {
             state.tasks = []

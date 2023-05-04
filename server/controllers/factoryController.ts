@@ -1,6 +1,6 @@
 import catchAsync from '../helpers/catchAsync'
 import { Request, Response } from 'express'
-import { ICategoryToUpdate, IGetUserAuthInfoRequest, ITaskToUpdate } from '../types/userTypes'
+import { ICategoryToUpdate, IGetUserAuthInfoRequest, IMulterFile, ITaskToUpdate, IUpdateBody } from '../types/userTypes'
 import AppError from '../errors/AppError'
 
 interface ITaskCreate {
@@ -67,8 +67,12 @@ export const getOne = (Model: Record<string, any>, populateOptions?: object) =>
 
 export const updateOne = (Model: Record<string, any>, unallowedFields?: string[] | null) =>
     catchAsync(async (req: IGetUserAuthInfoRequest, res: Response) => {
-        const content = { ...req.body }
+        let content = { ...req.body } as IUpdateBody
         const contentKeys = Object.keys(content)
+
+        if (req.file !== null) {
+            content.imageSrc = (req.file as IMulterFile).filename
+        }
 
         if (unallowedFields && unallowedFields.some((field) => contentKeys.includes(field))) {
             throw new AppError(`Fields of ${unallowedFields.join(', ')} cannot be updated`, 400)

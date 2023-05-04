@@ -1,15 +1,45 @@
+import { useEffect } from 'react'
 import { Bars3Icon } from '@heroicons/react/20/solid'
 import Avatar from '../Avatar'
 import { useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks'
 import { open as openRegisterModal } from '../../redux/registerModalSlice'
 import { open as openLoginModal } from '../../redux/loginModalSlice'
-import { removeCurrentUser } from '../../redux/userSlice'
+import { CURRENT_USER_LOCAL_KEY, setCurrentUser, signOut } from '../../redux/userSlice'
+import { Link } from 'react-router-dom'
+import { setStorageValue } from '../../helpers/storageHelper'
 
 const UserMenu = () => {
     const currentUser = useAppSelector((state) => state.currentUser.userInfo)
+    const categories = useAppSelector((state) => state.category.categories)
+    const tasks = useAppSelector((state) => state.task.tasks)
+
     const dispatch = useAppDispatch()
     const [isOpen, setIsOpen] = useState<boolean>(false)
+
+    useEffect(() => {
+        if (currentUser == null) return
+
+        const newCurrentUser = {
+            ...currentUser,
+            categories,
+        }
+
+        setCurrentUser(newCurrentUser)
+        setStorageValue(CURRENT_USER_LOCAL_KEY, newCurrentUser)
+    }, [categories])
+
+    useEffect(() => {
+        if (currentUser == null) return
+
+        const newCurrentUser = {
+            ...currentUser,
+            tasks,
+        }
+
+        setCurrentUser(newCurrentUser)
+        setStorageValue(CURRENT_USER_LOCAL_KEY, newCurrentUser)
+    }, [tasks])
 
     function toggleMenu() {
         setIsOpen((value) => !value)
@@ -26,7 +56,7 @@ const UserMenu = () => {
     }
 
     function handleLogOut() {
-        dispatch(removeCurrentUser())
+        dispatch(signOut())
     }
 
     return (
@@ -65,12 +95,12 @@ const UserMenu = () => {
                                 : '-translate-y-2 opacity-0 pointer-events-none'
                         }`}
                     >
-                        <div className="py-2 px-5 cursor-pointer hover:bg-sky-500/70" onClick={() => {}}>
-                            My tasks
-                        </div>
+                        <Link to="/myAccount">
+                            <div className="py-2 px-5 cursor-pointer hover:bg-sky-500/70">My Account</div>
+                        </Link>
                         <hr />
                         <div className="py-2 px-5 cursor-pointer hover:bg-sky-500/70" onClick={() => {}}>
-                            Create tasks
+                            Kanban board
                         </div>
                         <hr />
                         <div className="py-2 px-5 cursor-pointer hover:bg-sky-500/70" onClick={handleLogOut}>

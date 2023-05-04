@@ -140,3 +140,20 @@ export interface CategoryToUpdate {
     title: string
     description?: string
 }
+
+export interface IUpdateAccount {
+    name?: string
+    email?: string
+    imageSrc?: any
+}
+
+export interface IFile {
+    url: string
+    name: string
+}
+
+export interface UpdatePasswordData {
+    currentPassword: string
+    password: string
+    passwordConfirm: string
+}

@@ -1,4 +1,5 @@
 import express from 'express'
+import path from 'path'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import compression from 'compression'
@@ -18,6 +19,8 @@ import categoryRouter from './routes/categoryRouter'
 import errorController from './controllers/errorController'
 
 const app = express()
+
+app.use(express.static(path.join(__dirname, 'public')))
 
 // Security configuration
 app.use(helmet())

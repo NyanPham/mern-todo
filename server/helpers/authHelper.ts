@@ -27,7 +27,8 @@ const createAndSendToken = (userId: string, res: express.Response, tokenResponse
     res.cookie('jwt', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'none',
+        expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        // sameSite: 'none',
     })
         .status(tokenResponse.statusCode)
         .json({

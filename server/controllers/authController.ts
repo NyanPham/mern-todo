@@ -1,4 +1,4 @@
-import express from 'express'
+import { Request, Response, NextFunction } from 'express'
 import crypto from 'crypto'
 import User from '../models/User'
 import { IGetUserAuthInfoRequest, IUser, IUserForClient } from '../types/userTypes'
@@ -7,7 +7,7 @@ import { createAndSendToken, verifyToken } from '../helpers/authHelper'
 import sendMail, { IMailerOptions } from '../helpers/mailSender'
 import AppError from '../errors/AppError'
 
-export const register = catchAsync(async (req: express.Request, res: express.Response) => {
+export const register = catchAsync(async (req: Request, res: Response) => {
     const {
         name,
         email,
@@ -54,7 +54,7 @@ export const register = catchAsync(async (req: express.Request, res: express.Res
     })
 })
 
-export const login = catchAsync(async (req: express.Request, res: express.Response) => {
+export const login = catchAsync(async (req: Request, res: Response) => {
     const {
         email,
         password,
@@ -91,7 +91,19 @@ export const login = catchAsync(async (req: express.Request, res: express.Respon
     })
 })
 
-export const protect = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+export const logout = catchAsync(async (req: Request, res: Response) => {
+    res.cookie('jwt', 'logged_out', {
+        httpOnly: true,
+        secure: false,
+        expires: new Date(Date.now() + 3000),
+        sameSite: 'none',
+    }).json({
+        status: 'success',
+        message: 'You have logged out successfully',
+    })
+})
+
+export const protect = async (req: Request, res: Response, next: NextFunction) => {
     try {
         let token = null
 
@@ -125,7 +137,7 @@ export const protect = async (req: express.Request, res: express.Response, next:
 
 export const restrictTo =
     (...roles: string[]) =>
-    async (req: IGetUserAuthInfoRequest, res: express.Response, next: express.NextFunction) => {
+    async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
         try {
             if (req.currentUser == null) {
                 next(new AppError('You have not logged in!', 400))
@@ -141,7 +153,7 @@ export const restrictTo =
         }
     }
 
-export const updatePassword = catchAsync(async (req: IGetUserAuthInfoRequest, res: express.Response) => {
+export const updatePassword = catchAsync(async (req: IGetUserAuthInfoRequest, res: Response) => {
     // @ts-ignore
     const { currentPassword, password, passwordConfirm } = req.body
 
@@ -170,7 +182,7 @@ export const updatePassword = catchAsync(async (req: IGetUserAuthInfoRequest, re
     })
 })
 
-export const forgotPassword = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+export const forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { email } = req.body
 
@@ -212,7 +224,7 @@ export const forgotPassword = async (req: express.Request, res: express.Response
     }
 }
 
-export const resetPassword = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+export const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { resetToken } = req.params
         const { password, passwordConfirm } = req.body

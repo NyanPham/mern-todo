@@ -12,7 +12,10 @@ import {
     getMyCategory,
     updateMyCategory,
     deleteMyCategory,
+    getMyAccount,
+    updateMyAccount,
 } from '../controllers/meController'
+import { uploadImage } from '../controllers/userController'
 
 const router = express.Router()
 router.use(protect)
@@ -23,6 +26,6 @@ router.route('/myTasks/:id').get(getMyTask).patch(updateMyTask).delete(deleteMyT
 router.route('/myCategories').get(getMyCategories).post(createMyCategory)
 router.route('/myCategories/:id').get(getMyCategory).patch(updateMyCategory).delete(deleteMyCategory)
 
-router.delete('/myAccount', deactivateMyAccount)
+router.route('/myAccount').get(getMyAccount).patch(uploadImage, updateMyAccount).delete(deactivateMyAccount)
 
 export default router

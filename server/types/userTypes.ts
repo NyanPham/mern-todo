@@ -33,6 +33,20 @@ export interface IUserForClient {
 export interface IGetUserAuthInfoRequest extends Request {
     currentUser?: IUser | null | undefined
     params?: IRequestParams
+    file?: File | IMulterFile
+    files?: File[]
+}
+
+export interface IUnallowedUpdateAccRequest {
+    password?: string
+    passwordConfirm?: string
+    role?: string
+}
+
+export interface IAllowedUpdateAccRequest {
+    name?: string
+    email?: string
+    imageSrc?: string
 }
 
 export interface IUpdateItemRequestBody {
@@ -56,4 +70,12 @@ export interface ICategoryToUpdate {
     subtitle?: string
     imageSrc?: boolean
     userId?: string | number | null
+}
+
+export interface IUpdateBody {
+    imageSrc?: string
+}
+
+export interface IMulterFile {
+    filename: string
 }
