@@ -12,7 +12,7 @@ const EditCategoryModal = () => {
     const categories = useAppSelector((state) => state.category.categories)
     const currentCategoryId = useAppSelector((state) => state.category.currentCategoryId)
 
-    const currentCategory = categories.find((category) => category._id === currentCategoryId)
+    const currentCategory = categories?.find((category) => category._id === currentCategoryId)
 
     const dispatch = useAppDispatch()
 

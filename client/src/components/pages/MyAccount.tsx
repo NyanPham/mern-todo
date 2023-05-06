@@ -30,10 +30,12 @@ const MyAccount = () => {
                             subtitle="You can update your account and change your password here"
                         />
                     </div>
-                    <div className="py-7 px-12">
+                    <div className="py-7 px-12 space-y-3">
+                        <Heading title="Update Profile" />
                         <UpdateAccount />
                     </div>
-                    <div className="py-7 px-12">
+                    <div className="py-7 px-12 space-y-3">
+                        <Heading title="Update Password" />
                         <UpdatePassword />
                     </div>
                 </div>

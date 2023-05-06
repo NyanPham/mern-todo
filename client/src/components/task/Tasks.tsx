@@ -22,6 +22,8 @@ const Tasks = () => {
             return
         }
 
+        if (currentUser.tasks == null) return
+
         dispatch(setTasksFromUsers({ tasks: currentUser.tasks }))
     }, [currentUser, dispatch, removeTasks, setTasksFromUsers])
 
@@ -50,7 +52,7 @@ const Tasks = () => {
     }
 
     return (
-        <div className="w-3/5 bg-white/20 rounded-lg backdrop-blur-lg shadow-white">
+        <div className="w-3/5 bg-white/20 rounded-lg backdrop-blur-lg shadow-white overflow-hidden">
             <CategoryHeading />
             <hr />
             {currentCategoryId ? (

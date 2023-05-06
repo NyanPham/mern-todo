@@ -14,11 +14,14 @@ import {
     deleteMyCategory,
     getMyAccount,
     updateMyAccount,
+    getMe,
 } from '../controllers/meController'
 import { uploadImage } from '../controllers/userController'
 
 const router = express.Router()
 router.use(protect)
+
+router.route('/').get(getMe)
 
 router.route('/myTasks').get(getMyTasks).post(createMyTask)
 router.route('/myTasks/:id').get(getMyTask).patch(updateMyTask).delete(deleteMyTask)

@@ -58,6 +58,7 @@ interface CategoryState {
     isLoading: boolean
     error: string | null | undefined
     message: string | null
+    isHighlighted: boolean
 }
 
 const initialState: CategoryState = {
@@ -66,6 +67,7 @@ const initialState: CategoryState = {
     isLoading: false,
     error: '',
     message: '',
+    isHighlighted: false,
 }
 
 export const categorySlice = createSlice({
@@ -85,7 +87,7 @@ export const categorySlice = createSlice({
                 return
             }
 
-            if (state.categories.length > 0) {
+            if (state.categories?.length > 0) {
                 state.currentCategoryId = state.categories[0]._id
             }
         },
@@ -104,6 +106,9 @@ export const categorySlice = createSlice({
 
             category.title = payload.title
             category.description = payload.description
+        },
+        setHighlighted: (state, { payload }: { payload: boolean }) => {
+            state.isHighlighted = payload
         },
     },
     extraReducers: (builder) => {
@@ -169,8 +174,14 @@ export const categorySlice = createSlice({
         })
     },
 })
-export const { setCategoriesFromUser, removeCategories, selectCategory, updateCategory, removeCategory } =
-    categorySlice.actions
+export const {
+    setCategoriesFromUser,
+    removeCategories,
+    selectCategory,
+    updateCategory,
+    removeCategory,
+    setHighlighted,
+} = categorySlice.actions
 export const categories = (state: RootState) => state.category.categories
 export const currentCategoryId = (state: RootState) => state.category.currentCategoryId
 

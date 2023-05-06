@@ -7,6 +7,8 @@ import categorySlice from './categorySlice'
 import taskSlice from './taskSlice'
 import editTaskModalSlice from './editTaskModalSlice'
 import editCategoryModalSlice from './editCategoryModalSlice'
+import loadingLayerSlice from './loadingLayerSlice'
+import searchSlice from './searchSlice'
 
 export const store = configureStore({
     reducer: {
@@ -18,6 +20,8 @@ export const store = configureStore({
         task: taskSlice,
         editTaskModal: editTaskModalSlice,
         editCategoryModal: editCategoryModalSlice,
+        loadingLayer: loadingLayerSlice,
+        search: searchSlice,
     },
 })
 

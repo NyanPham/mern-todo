@@ -59,6 +59,7 @@ export interface CurrentUser {
     tasks: Task[]
     categories: Category[]
     favorites: string[]
+    authExpiresDate?: string
 }
 
 export interface InputProps {
@@ -156,4 +157,15 @@ export interface UpdatePasswordData {
     currentPassword: string
     password: string
     passwordConfirm: string
+}
+
+export interface ISearchPayload {
+    searchTerm: string | ''
+    categories: Category[]
+    tasks: Task[]
+}
+
+export interface ISearchResult {
+    type: 'category' | 'task'
+    data: Category | Task
 }

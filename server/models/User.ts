@@ -112,6 +112,13 @@ userSchema.pre('findOne', function (next) {
     next()
 })
 
+userSchema.pre('findOneAndUpdate', function (next) {
+    this.populate({ path: 'tasks' })
+    this.populate({ path: 'categories' })
+
+    next()
+})
+
 const User = mongoose.model<IUser>('User', userSchema)
 
 export default User

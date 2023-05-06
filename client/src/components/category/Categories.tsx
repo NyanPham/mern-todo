@@ -18,6 +18,8 @@ const Categories = () => {
             return
         }
 
+        if (currentUser.categories == null) return
+
         dispatch(setCategoriesFromUser({ categories: currentUser.categories }))
     }, [currentUser, dispatch, removeCategories, setCategoriesFromUser])
 

@@ -24,17 +24,19 @@ const createToken = (userId: string): string => {
 const createAndSendToken = (userId: string, res: express.Response, tokenResponse: ITokenResponse): void => {
     const token = createToken(userId)
 
+    const tokenExpires: Date = new Date(Date.now() + 24 * 60 * 60 * 1000)
+
     res.cookie('jwt', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        expires: tokenExpires,
         // sameSite: 'none',
     })
         .status(tokenResponse.statusCode)
         .json({
             status: 'success',
             message: tokenResponse.message,
-            currentUser: tokenResponse.currentUser,
+            currentUser: { ...tokenResponse.currentUser, authExpiresDate: tokenExpires },
         })
 }
 

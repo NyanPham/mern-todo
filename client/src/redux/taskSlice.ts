@@ -86,6 +86,7 @@ interface TaskState {
     isLoading: boolean
     error: string | null | undefined
     message: string | null
+    isHighlighted: boolean
 }
 
 const initialState: TaskState = {
@@ -94,6 +95,7 @@ const initialState: TaskState = {
     isLoading: false,
     error: '',
     message: '',
+    isHighlighted: false,
 }
 
 export const taskSlice = createSlice({
@@ -103,8 +105,8 @@ export const taskSlice = createSlice({
         setTasksFromUsers: (state, { payload }) => {
             state.tasks = payload.tasks
 
-            if (state.currentTaskId && state.tasks.some((task) => task._id === state.currentTaskId)) return
-            if (state.tasks.length > 0) {
+            if (state.currentTaskId && state.tasks?.some((task) => task._id === state.currentTaskId)) return
+            if (state.tasks?.length > 0) {
                 state.currentTaskId = state.tasks[0]._id
             }
         },
@@ -129,6 +131,9 @@ export const taskSlice = createSlice({
         },
         setCurrentTaskId: (state, { payload }) => {
             state.currentTaskId = payload.taskId
+        },
+        setHighlighted: (state, { payload }: { payload: boolean }) => {
+            state.isHighlighted = payload
         },
     },
     extraReducers: (builder) => {
@@ -213,8 +218,15 @@ export const taskSlice = createSlice({
     },
 })
 
-export const { setTasksFromUsers, removeTasks, toggleTaskComplete, updateTask, removeTask, setCurrentTaskId } =
-    taskSlice.actions
+export const {
+    setTasksFromUsers,
+    removeTasks,
+    toggleTaskComplete,
+    updateTask,
+    removeTask,
+    setCurrentTaskId,
+    setHighlighted,
+} = taskSlice.actions
 export const tasks = (state: RootState) => state.task.tasks
 export const currentTaskId = (state: RootState) => state.task.currentTaskId
 

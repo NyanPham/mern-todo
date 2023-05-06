@@ -1,5 +1,6 @@
+import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks'
-import { deleteCategoryAsync, removeCategory } from '../../redux/categorySlice'
+import { deleteCategoryAsync, removeCategory, setHighlighted } from '../../redux/categorySlice'
 import { openCategoryModal } from '../../redux/editCategoryModalSlice'
 import Heading from '../Heading'
 import CategoryButtons from './CategoryButtons'
@@ -7,9 +8,17 @@ import CategoryButtons from './CategoryButtons'
 const CategoryHeading = () => {
     const currentCategoryId = useAppSelector((state) => state.category.currentCategoryId)
     const categories = useAppSelector((state) => state.category.categories)
-    const currentCategory = categories.find((category) => category._id === currentCategoryId)
-
+    const isHighlighted = useAppSelector((state) => state.category.isHighlighted)
+    const currentCategory = categories?.find((category) => category._id === currentCategoryId)
     const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        if (isHighlighted === true) {
+            setTimeout(() => {
+                dispatch(setHighlighted(false))
+            }, 2000)
+        }
+    }, [isHighlighted])
 
     const handleOpenEdit = () => {
         dispatch(openCategoryModal())
@@ -21,7 +30,11 @@ const CategoryHeading = () => {
     }
 
     return (
-        <div className="p-4 flex flex-row items-center justify-between">
+        <div
+            className={`p-4 flex flex-row items-center justify-between transition ${
+                isHighlighted ? 'bg-yellow-500 duration-200 text-white' : 'duration-500'
+            }`}
+        >
             <Heading title={currentCategory?.title || 'Tasks'} subtitle={currentCategory?.description || null} />
             {currentCategory && <CategoryButtons onOpenEdit={handleOpenEdit} onDelete={handleDeleteCategory} />}
         </div>

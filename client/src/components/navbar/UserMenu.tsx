@@ -5,9 +5,8 @@ import { useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks'
 import { open as openRegisterModal } from '../../redux/registerModalSlice'
 import { open as openLoginModal } from '../../redux/loginModalSlice'
-import { CURRENT_USER_LOCAL_KEY, setCurrentUser, signOut } from '../../redux/userSlice'
+import { checkLoggedIn, setCurrentUser, signOut } from '../../redux/userSlice'
 import { Link } from 'react-router-dom'
-import { setStorageValue } from '../../helpers/storageHelper'
 
 const UserMenu = () => {
     const currentUser = useAppSelector((state) => state.currentUser.userInfo)
@@ -18,6 +17,10 @@ const UserMenu = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
 
     useEffect(() => {
+        dispatch(checkLoggedIn())
+    }, [])
+
+    useEffect(() => {
         if (currentUser == null) return
 
         const newCurrentUser = {
@@ -26,7 +29,6 @@ const UserMenu = () => {
         }
 
         setCurrentUser(newCurrentUser)
-        setStorageValue(CURRENT_USER_LOCAL_KEY, newCurrentUser)
     }, [categories])
 
     useEffect(() => {
@@ -38,7 +40,6 @@ const UserMenu = () => {
         }
 
         setCurrentUser(newCurrentUser)
-        setStorageValue(CURRENT_USER_LOCAL_KEY, newCurrentUser)
     }, [tasks])
 
     function toggleMenu() {
@@ -56,7 +57,8 @@ const UserMenu = () => {
     }
 
     function handleLogOut() {
-        dispatch(signOut())
+        setIsOpen(false)
+        return dispatch(signOut())
     }
 
     return (
@@ -65,7 +67,7 @@ const UserMenu = () => {
                 className="py-1 px-1 rounded-full border-[1px] border-gray-900/30 flex flex-row items-center gap-1 cursor-pointer select-none hover:shadow-md hover:-translate-y-[2px] transition duration-250"
                 onClick={toggleMenu}
             >
-                <Avatar imageSrc={currentUser?.imageSrc} />
+                <Avatar imageSrc={currentUser?.imageSrc || 'default.jpg'} />
                 <Bars3Icon className="h-5 w-5 text-gray-500" />
             </div>
             {currentUser == null ? (
@@ -95,7 +97,7 @@ const UserMenu = () => {
                                 : '-translate-y-2 opacity-0 pointer-events-none'
                         }`}
                     >
-                        <Link to="/myAccount">
+                        <Link to="/myAccount" onClick={() => setIsOpen(false)}>
                             <div className="py-2 px-5 cursor-pointer hover:bg-sky-500/70">My Account</div>
                         </Link>
                         <hr />

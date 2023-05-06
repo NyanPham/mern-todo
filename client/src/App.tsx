@@ -5,6 +5,7 @@ import ModalContainer from './components/modals/ModalContainer'
 import ToastContainer from './components/toasts/ToastContainer'
 import MyAccount from './components/pages/MyAccount'
 import Search from './components/pages/Search'
+import LoadingLayer from './components/LoadingLayer'
 
 function App() {
     return (
@@ -13,11 +14,12 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/myAccount" element={<MyAccount />} />
-                    <Route path="/search" element={<Search />} />
+                    <Route path="/search/:searchTerm" element={<Search />} />
                 </Routes>
             </Layout>
             <ModalContainer />
             <ToastContainer />
+            <LoadingLayer />
         </div>
     )
 }

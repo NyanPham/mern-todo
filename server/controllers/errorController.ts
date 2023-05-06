@@ -43,7 +43,7 @@ const handleErrorDev = (error: AppError, res: Response) => {
 }
 
 const errorController = async (error: AppError, req: Request, res: Response, next: NextFunction) => {
-    // console.log(error)
+    console.log(error)
 
     if (process.env.NODE_ENV === 'development') {
         handleErrorDev(error, res)

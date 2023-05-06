@@ -1,20 +1,50 @@
+import { useRef, useEffect, useState } from 'react'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
-import { useRef } from 'react'
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks'
+import { setSearchTerm, startSearching, stopSearching } from '../../redux/searchSlice'
+import { useNavigate } from 'react-router-dom'
 
 const SearchBar = () => {
+    const searchTerm = useAppSelector((state) => state.search.searchTerm)
+    const isSearching = useAppSelector((state) => state.search.isSearching)
+    const tasks = useAppSelector((state) => state.task.tasks)
+    const categories = useAppSelector((state) => state.category.categories)
+
+    const [focused, setFocused] = useState<boolean>(false)
+
     const inputRef = useRef<HTMLInputElement>(null)
+    const dispatch = useAppDispatch()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (isSearching) {
+            navigate(`/search/${searchTerm}`)
+        }
+    }, [searchTerm, navigate])
 
     function handleIconClick() {
-        const searchTerm = inputRef?.current?.value
-
-        if (searchTerm) {
-            // implement search function later
-            // console.log('search')
-            return
-        }
-
         inputRef?.current?.focus()
+
+        if (searchTerm !== '') {
+            navigate(`/search/${searchTerm}`)
+        }
     }
+
+    function handleSearchChange(e: React.ChangeEvent<HTMLInputElement>) {
+        dispatch(
+            setSearchTerm({
+                searchTerm: e.target.value,
+                tasks,
+                categories,
+            })
+        )
+    }
+
+    function handleSearchBlur() {
+        dispatch(stopSearching())
+    }
+
+    function handleSearchFocus() {}
 
     return (
         <div className="flex flex-row items-center gap-2 py-1 px-4 text-md text-gray-700 leading-4 rounded-full border border-gray-500/60 outline-none transition duration-250 focus:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-sky-500">
@@ -26,6 +56,10 @@ const SearchBar = () => {
                 type="text"
                 name="search"
                 ref={inputRef}
+                value={searchTerm}
+                onChange={handleSearchChange}
+                onBlur={handleSearchBlur}
+                onFocus={handleSearchFocus}
             />
             <MagnifyingGlassIcon
                 className="w-5 h-5 cursor-pointer hover:opacity-50 transition duration-200"

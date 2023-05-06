@@ -52,12 +52,30 @@ export const updateMyAccount = catchAsync(async (req: IGetUserAuthInfoRequest, r
         new: true,
     })
 
+    console.log(updatedUser)
     if (!updatedUser) return new AppError('Failed to update account!', 400)
 
     res.status(200).json({
         status: 'success',
         data: {
             data: updatedUser,
+        },
+    })
+})
+
+export const getMe = catchAsync(async (req: IGetUserAuthInfoRequest, res: Response) => {
+    const userId = req.currentUser._id
+
+    const currentUser = await User.findById(userId)
+
+    if (currentUser == null) {
+        throw new AppError('User not found or expired token!', 400)
+    }
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            currentUser,
         },
     })
 })

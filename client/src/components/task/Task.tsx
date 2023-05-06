@@ -1,9 +1,10 @@
 import { useEffect } from 'react'
-import { useAppDispatch } from '../../hooks/reduxHooks'
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks'
 import {
     deleteTaskAsync,
     removeTask,
     setCurrentTaskId,
+    setHighlighted,
     toggleCompleteAsync,
     toggleTaskComplete,
 } from '../../redux/taskSlice'
@@ -22,7 +23,19 @@ interface Task {
 }
 
 const Task: React.FC<Task> = ({ title, id, isComplete }) => {
+    const currentTaskId = useAppSelector((state) => state.task.currentTaskId)
+    const isHighlighted = useAppSelector((state) => state.task.isHighlighted)
     const dispatch = useAppDispatch()
+
+    const currentIsHighlighted = isHighlighted && currentTaskId === id
+
+    useEffect(() => {
+        if (currentIsHighlighted) {
+            setTimeout(() => {
+                dispatch(setHighlighted(false))
+            }, 2000)
+        }
+    }, [isHighlighted, currentTaskId])
 
     function handleToggleComplete() {
         dispatch(toggleTaskComplete({ taskId: id }))
@@ -48,7 +61,11 @@ const Task: React.FC<Task> = ({ title, id, isComplete }) => {
     }, [isComplete, dispatch, toggleCompleteAsync])
 
     return (
-        <div className={`flex flex-row items-center justify-between py-3 px-4 hover:bg-gray-900/30 cursor-pointer}`}>
+        <div
+            className={`flex flex-row items-center justify-between py-3 px-4 hover:bg-gray-900/30 cursor-pointer transition ${
+                currentIsHighlighted ? 'bg-yellow-500 duration-200 text-white' : 'duration-500'
+            }`}
+        >
             <div className="flex flex-row items-center justify-start gap-3">
                 <div
                     className={`peer w-7 h-7 rounded-full border-2 inline-grid place-items-center transition duration-200 cursor-pointer ${
