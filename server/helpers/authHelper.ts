@@ -30,7 +30,7 @@ const createAndSendToken = (userId: string, res: express.Response, tokenResponse
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         expires: tokenExpires,
-        // sameSite: 'none',
+        sameSite: 'none',
     })
         .status(tokenResponse.statusCode)
         .json({

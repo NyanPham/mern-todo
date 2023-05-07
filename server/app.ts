@@ -26,20 +26,20 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(helmet())
 app.use(
     cors({
-        origin: ['http://localhost:5173', 'https://mern-todo-client-dun.vercel.app'],
+        origin: ['https://nyan-todo.vercel.app'],
         credentials: true,
     })
 )
 app.options(
     '*',
     cors({
-        origin: ['http://localhost:5173', 'https://mern-todo-client-dun.vercel.app'],
+        origin: ['https://nyan-todo.vercel.app'],
         credentials: true,
     })
 )
 
 app.options('*', function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', 'https://mern-todo-client-dun.vercel.app')
+    res.header('Access-Control-Allow-Origin', 'https://nyan-todo.vercel.app')
     next()
 })
 

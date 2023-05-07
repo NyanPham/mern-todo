@@ -20,9 +20,15 @@ interface Task {
     imageSrc?: string
     createdAt?: Date
     modifiedAt?: Date
+    dueDate?: Date
+
+    onDragStart: (e: React.DragEvent<HTMLInputElement>) => void
+    onDragMove: (e: React.DragEvent<HTMLInputElement>) => void
+    onDragEnd: (e: React.DragEvent<HTMLInputElement>) => void
+    onDragDrop: (e: React.DragEvent<HTMLInputElement>) => void
 }
 
-const Task: React.FC<Task> = ({ title, id, isComplete }) => {
+const Task: React.FC<Task> = ({ title, id, isComplete, dueDate, onDragStart, onDragMove, onDragEnd, onDragDrop }) => {
     const currentTaskId = useAppSelector((state) => state.task.currentTaskId)
     const isHighlighted = useAppSelector((state) => state.task.isHighlighted)
     const dispatch = useAppDispatch()
@@ -62,19 +68,25 @@ const Task: React.FC<Task> = ({ title, id, isComplete }) => {
 
     return (
         <div
-            className={`flex flex-row items-center justify-between py-3 px-4 hover:bg-gray-900/30 cursor-pointer transition ${
+            className={`select-none flex flex-row items-center justify-between py-3 px-4 hover:bg-gray-900/30 cursor-pointer transition text-white ${
                 currentIsHighlighted ? 'bg-yellow-500 duration-200 text-white' : 'duration-500'
             }`}
+            draggable
+            onDragStart={onDragStart}
+            onDragEnd={onDragEnd}
+            onDragOver={onDragMove}
+            onDrop={onDragDrop}
+            data-drag-item={id}
         >
             <div className="flex flex-row items-center justify-start gap-3">
                 <div
                     className={`peer w-7 h-7 rounded-full border-2 inline-grid place-items-center transition duration-200 cursor-pointer ${
-                        isComplete ? 'border-cyan-200' : 'border-gray-800'
+                        isComplete ? 'border-cyan-200' : 'border-white-800'
                     }`}
                     onClick={handleToggleComplete}
                 >
                     <div
-                        className={`w-4 h-4 rounded-full transition duration-200 ${
+                        className={`w-4 h-4 rounded-full transition duration-200 text-white ${
                             isComplete ? 'bg-cyan-200' : 'bg-transparent'
                         }`}
                     ></div>
@@ -87,6 +99,7 @@ const Task: React.FC<Task> = ({ title, id, isComplete }) => {
                     {title}
                 </h3>
             </div>
+            {dueDate && <p>{dueDate.toString()}</p>}
             <TaskButtons
                 isComplete={isComplete}
                 onToggleComplete={handleToggleComplete}

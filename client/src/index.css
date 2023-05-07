@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .use-dragging {
+        @apply bg-green-500/80
+    }
+}   

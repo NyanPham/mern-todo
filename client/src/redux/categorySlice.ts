@@ -1,56 +1,133 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { RootState } from './store'
-import { CategoryData, CategoryToUpdate, DeleteCategoryData, ResponseData, UpdateCategoryData } from '../types'
+import {
+    CategoryData,
+    CategoryToUpdate,
+    DeleteCategoryData,
+    ResponseData,
+    UpdateCategoryData,
+    UpdateOrder,
+} from '../types'
+import { hideLoading, showLoading } from './loadingLayerSlice'
+import { setToastInfo, open as openToast } from './toastSlice'
 
-export const createCategoryAsync = createAsyncThunk('categories/create', async (body: CategoryData) => {
-    const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/v1/me/myCategories`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Credentials': 'true',
-        },
-        credentials: 'include',
-        body: JSON.stringify(body),
-    })
+export const createCategoryAsync = createAsyncThunk('categories/create', async (body: CategoryData, { dispatch }) => {
+    dispatch(showLoading())
+    try {
+        const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/v1/me/myCategories`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Credentials': 'true',
+            },
+            credentials: 'include',
+            body: JSON.stringify(body),
+        })
 
-    const data: ResponseData = await response.json()
-    return data
-})
+        const data: ResponseData = await response.json()
+        return data
+    } catch (error: any) {
+        dispatch(
+            setToastInfo({
+                title: 'Error',
+                subtitle: 'Failed to update category',
+                type: 'error',
+            })
+        )
 
-export const deleteCategoryAsync = createAsyncThunk('categories/deleteCategory', async (body: DeleteCategoryData) => {
-    const url = `${import.meta.env.VITE_SERVER_URL}/api/v1/me/myCategories/${body.categoryId}`
-    const res = await fetch(url, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-    })
-
-    const data: ResponseData = await res.json()
-    return data
-})
-
-export const updateCategoryAsync = createAsyncThunk('categoryies/updateCategory', async (body: UpdateCategoryData) => {
-    const url = `${import.meta.env.VITE_SERVER_URL}/api/v1/me/myCategories/${body.categoryId}`
-
-    const categoryToUpdate: CategoryToUpdate = {
-        title: body.title,
-        description: body.description,
+        dispatch(openToast())
+    } finally {
+        dispatch(hideLoading())
     }
-
-    const res = await fetch(url, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(categoryToUpdate),
-    })
-
-    const data: ResponseData = await res.json()
-    return data
 })
+
+export const deleteCategoryAsync = createAsyncThunk(
+    'categories/deleteCategory',
+    async (body: DeleteCategoryData, { dispatch }) => {
+        try {
+            const url = `${import.meta.env.VITE_SERVER_URL}/api/v1/me/myCategories/${body.categoryId}`
+            await fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+            })
+        } catch (error: any) {
+            dispatch(
+                setToastInfo({
+                    title: 'Error',
+                    subtitle: error.message,
+                    type: 'error',
+                })
+            )
+
+            dispatch(openToast())
+        } finally {
+            dispatch(hideLoading())
+        }
+    }
+)
+
+export const updateCategoryAsync = createAsyncThunk(
+    'categoryies/updateCategory',
+    async (body: UpdateCategoryData, { dispatch }) => {
+        const url = `${import.meta.env.VITE_SERVER_URL}/api/v1/me/myCategories/${body.categoryId}`
+
+        const categoryToUpdate: CategoryToUpdate = {
+            title: body.title,
+            description: body.description,
+        }
+
+        dispatch(showLoading())
+        try {
+            const res = await fetch(url, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify(categoryToUpdate),
+            })
+
+            const data: ResponseData = await res.json()
+            return data
+        } catch (error) {
+            dispatch(
+                setToastInfo({
+                    title: 'Error',
+                    subtitle: 'Failed to update category',
+                    type: 'error',
+                })
+            )
+
+            dispatch(openToast())
+        } finally {
+            dispatch(hideLoading())
+        }
+    }
+)
+
+export const changeCategoryOrdersAsync = createAsyncThunk(
+    'categories/updateCategoryOrder',
+    async (body: UpdateOrder[]) => {
+        const promises = body.map((info) => {
+            return fetch(`${import.meta.env.VITE_SERVER_URL}/api/v1/me/myCategories/${info.id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({ displayOrder: info.displayOrder }),
+            })
+        })
+
+        const responses = await Promise.all(promises)
+        const data: ResponseData[] = await Promise.all(responses.map((res) => res.json()))
+
+        return data
+    }
+)
 
 interface CategoryState {
     categories: any[]
@@ -120,11 +197,11 @@ export const categorySlice = createSlice({
         builder.addCase(createCategoryAsync.fulfilled, (state, { payload }) => {
             state.isLoading = false
 
-            if (payload.status === 'success') {
+            if (payload?.status === 'success') {
                 state.categories.push(payload.data.data)
                 state.currentCategoryId = payload.data.data._id
             } else {
-                state.error = payload.message
+                state.error = payload?.message
             }
         })
         builder.addCase(createCategoryAsync.rejected, (state) => {
@@ -137,14 +214,8 @@ export const categorySlice = createSlice({
             state.error = ''
             state.message = ''
         })
-        builder.addCase(deleteCategoryAsync.fulfilled, (state, { payload }) => {
+        builder.addCase(deleteCategoryAsync.fulfilled, (state) => {
             state.isLoading = false
-
-            if (payload.status === 'success') {
-                // console.log(payload.data.data)
-            } else {
-                state.error = payload.message
-            }
         })
         builder.addCase(deleteCategoryAsync.rejected, (state) => {
             state.isLoading = false
@@ -158,17 +229,30 @@ export const categorySlice = createSlice({
         builder.addCase(updateCategoryAsync.fulfilled, (state, { payload }) => {
             state.isLoading = false
 
-            if (payload.status === 'success') {
+            if (payload?.status === 'success') {
                 const category = state.categories.find((category) => category._id === payload.data.data._id)
                 if (category == null) return
 
                 category.title = payload.data.data.title
                 category.description = payload.data.data.description
             } else {
-                state.error = payload.message
+                state.error = payload?.message
             }
         })
+
         builder.addCase(updateCategoryAsync.rejected, (state) => {
+            state.isLoading = false
+            state.error = 'Something went wrong when updating the category'
+        })
+        builder.addCase(changeCategoryOrdersAsync.pending, (state) => {
+            state.isLoading = true
+            state.error = ''
+            state.message = ''
+        })
+        builder.addCase(changeCategoryOrdersAsync.fulfilled, (state) => {
+            state.isLoading = false
+        })
+        builder.addCase(changeCategoryOrdersAsync.rejected, (state) => {
             state.isLoading = false
             state.error = 'Something went wrong when updating the category'
         })

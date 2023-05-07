@@ -49,18 +49,18 @@ const Modal: React.FC<ModalProps> = ({
 
     return (
         <div
-            className={`fixed top-0 left-0 w-full h-full bg-gray-900/70 grid place-items-center transition duration-300 ${
+            className={`fixed top-0 left-0 w-full h-full bg-gray-900/70 grid place-items-center transition duration-300 z-20 ${
                 show ? 'opacity-100' : 'opacity-0'
             }`}
         >
             <div
-                className={`w-2/3 md:w-1/2 lg:w-[450px] bg-white py-4 px-6 rounded-lg shadow-lg flex flex-col gap-4 transition duration-300 ${
+                className={`w-4/5 md:w-1/2 lg:w-[450px] bg-white py-2 px-3 md:py-4 md:px-6 rounded-lg shadow-lg flex flex-col gap-4 transition duration-300 ${
                     show ? 'translate-y-0' : '-translate-y-5'
                 }`}
             >
                 {/* Header */}
                 <div className="relative">
-                    <Heading title={title} subtitle={subtitle} />
+                    <Heading title={title} subtitle={subtitle} textDark />
                     <XMarkIcon
                         className="w-5 h-5 absolute top-5 right-1 text-gray-600 cursor-pointer"
                         onClick={handleClose}

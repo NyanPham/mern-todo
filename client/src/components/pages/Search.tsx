@@ -11,7 +11,7 @@ function handleSelectCategorySearch(categoryId: string, dispatch: AppDispatch) {
     dispatch(selectCategory({ categoryId }))
     dispatch(setCategoryHighlighted(true))
 }
-
+    
 function handleSelectTaskSearch(categoryId: string, taskId: string, dispatch: AppDispatch) {
     dispatch(selectCategory({ categoryId }))
     dispatch(setCurrentTaskId({ taskId }))

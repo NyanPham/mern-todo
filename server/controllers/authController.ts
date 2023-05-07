@@ -96,7 +96,7 @@ export const logout = catchAsync(async (req: Request, res: Response) => {
         httpOnly: true,
         secure: false,
         expires: new Date(Date.now() + 1500),
-        // sameSite: 'none',
+        sameSite: 'none',
     }).json({
         status: 'success',
         message: 'You have logged out successfully',

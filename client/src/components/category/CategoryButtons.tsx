@@ -8,7 +8,7 @@ interface CategoryButtonsProps {
 
 const CategoryButtons: React.FC<CategoryButtonsProps> = ({ onOpenEdit, onDelete }) => {
     return (
-        <div className="flex gap-2">
+        <div className="flex gap-2 text-white">
             <EditButton onOpenEditModal={onOpenEdit} />
             <DeleteButton onDelete={onDelete} />
         </div>

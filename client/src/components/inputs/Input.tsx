@@ -16,6 +16,7 @@ export const Input: React.FC<InputProps> = ({
     small,
     underlineOnly,
     bgTransparent,
+    onKeyPress,
 }) => {
     const [error, setError] = useState<string>('')
     const [blur, setOnBlur] = useState<boolean>(false)
@@ -59,6 +60,7 @@ export const Input: React.FC<InputProps> = ({
                 placeholder={small ? label : ' '}
                 required={required}
                 value={value}
+                onKeyDown={onKeyPress}
             />
             {!small && (
                 <label

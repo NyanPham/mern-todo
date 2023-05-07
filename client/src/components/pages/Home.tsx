@@ -25,7 +25,7 @@ const Home = () => {
         )
 
     return (
-        <div className="flex items-center justify-center gap-12 w-3/4 mx-auto">
+        <div className="px-7 flex items-start justify-center gap-12 w-full flex-col md:flex-row lg:w-3/4 mx-auto">
             <Categories />
             <Tasks />
         </div>

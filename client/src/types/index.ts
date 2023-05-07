@@ -37,17 +37,19 @@ export interface Task {
     title: string
     subtitle?: string
     isComplete: boolean
-    createdAt: Date
-    modifiedAt: Date
-    dueDate?: Date
+    createdAt: string
+    modifiedAt: string
+    dueDate?: string
+    displayOrder: number | 0
 }
 
 export interface Category {
     _id: string
     title: string
     description?: string
-    createdAt: Date
-    modifiedAt: Date
+    createdAt: string
+    modifiedAt: string
+    displayOrder: number | 0
 }
 
 export interface CurrentUser {
@@ -78,6 +80,7 @@ export interface InputProps {
     bgTransparent?: boolean
     underlineOnly?: boolean
     inputRef?: unknown
+    onKeyPress?: (e: React.KeyboardEvent<HTMLInputElement>) => void
 }
 
 export interface InputPlusProps {
@@ -118,13 +121,13 @@ export interface UpdateTaskData {
     taskId: string
     title: string
     subtitle?: string
-    dueDate?: Date
+    dueDate?: string
 }
 
 export interface TaskToUpdate {
     title: string
     subtitle?: string
-    dueDate?: Date
+    dueDate?: string
 }
 
 export interface DeleteCategoryData {
@@ -135,6 +138,11 @@ export interface UpdateCategoryData {
     categoryId: string
     title: string
     description?: string
+}
+
+export interface UpdateOrder {
+    id: string
+    displayOrder: number
 }
 
 export interface CategoryToUpdate {

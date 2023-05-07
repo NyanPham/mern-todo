@@ -31,11 +31,11 @@ const MyAccount = () => {
                         />
                     </div>
                     <div className="py-7 px-12 space-y-3">
-                        <Heading title="Update Profile" />
+                        <h3 className="text-lg font-semibold">Update Profile</h3>
                         <UpdateAccount />
                     </div>
                     <div className="py-7 px-12 space-y-3">
-                        <Heading title="Update Password" />
+                        <h3 className="text-lg font-semibold">Update Password</h3>
                         <UpdatePassword />
                     </div>
                 </div>

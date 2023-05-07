@@ -11,7 +11,7 @@ const Avatar: React.FC<AvatarProps> = ({ imageSrc, large, medium, isPreview = fa
     let imgSrc = defaultUser
 
     if (imageSrc != null && imageSrc !== 'default.jpg') {
-        imgSrc = isPreview ? imageSrc : `${import.meta.env.VITE_SERVER_URL}/public/images/avatars/${imageSrc}`
+        imgSrc = isPreview ? imageSrc : `${import.meta.env.VITE_SERVER_URL}/images/avatars/${imageSrc}`
     }
 
     let avatarSize = 'w-7 h-7'

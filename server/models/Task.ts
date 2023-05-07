@@ -33,7 +33,12 @@ const taskSchema = new mongoose.Schema({
         default: Date.now(),
     },
     dueDate: Date,
+    displayOrder: {
+        type: Number,
+    },
 })
+
+taskSchema.index({ categoryId: 1, displayOrder: 1 }, { unique: false })
 
 const Task = mongoose.model('Task', taskSchema)
 

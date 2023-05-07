@@ -5,16 +5,18 @@ import Task from './Task'
 import { setToastInfo, open as openToast } from '../../redux/toastSlice'
 import { createTaskAsync, removeTasks, setTasksFromUsers } from '../../redux/taskSlice'
 import CategoryHeading from '../category/CategoryHeading'
+import useDraggableWithDatabase from '../../hooks/useDraggableWithDatabase'
 
 const Tasks = () => {
     const currentUser = useAppSelector((state) => state.currentUser.userInfo)
     const tasks = useAppSelector((state) => state.task.tasks)
     // const currentTaskId = useAppSelector((state) => state.task.currentTaskId)
     const currentCategoryId = useAppSelector((state) => state.category.currentCategoryId)
-
     const tasksInCategory = tasks.filter((task) => task.categoryId === currentCategoryId)
-
     const dispatch = useAppDispatch()
+
+    const { blocksContainerRef, handleDragStart, handleDragEnd, handleDragMove, handleDragDrop } =
+        useDraggableWithDatabase([tasks, currentCategoryId], 'task')
 
     useEffect(() => {
         if (currentUser == null) {
@@ -33,7 +35,7 @@ const Tasks = () => {
         setTaskText(e.target.value)
     }
 
-    function onPlusIconClick() {
+    function onCreateTask() {
         if (currentUser == null) {
             dispatch(
                 setToastInfo({
@@ -51,12 +53,19 @@ const Tasks = () => {
         setTaskText('')
     }
 
+    function onEnterPress(e: React.KeyboardEvent<HTMLInputElement>) {
+        if (e.code !== 'Enter') return
+        if (taskText === '') return
+
+        onCreateTask()
+    }
+
     return (
-        <div className="w-3/5 bg-white/20 rounded-lg backdrop-blur-lg shadow-white overflow-hidden">
+        <div className="w-full bg-white/20 rounded-lg backdrop-blur-lg shadow-white overflow-hidden md:w-2/3 lg:-3/5">
             <CategoryHeading />
             <hr />
             {currentCategoryId ? (
-                <div className="max-h-96 overflow-y-auto">
+                <div className="max-h-96 overflow-y-auto" ref={blocksContainerRef}>
                     {currentUser && tasksInCategory?.length ? (
                         tasksInCategory.map((task) => (
                             <Task
@@ -66,6 +75,10 @@ const Tasks = () => {
                                 subtitle={task.subtitle}
                                 isComplete={task.isComplete}
                                 categoryId={task.categoryId}
+                                onDragStart={handleDragStart}
+                                onDragEnd={handleDragEnd}
+                                onDragMove={handleDragMove}
+                                onDragDrop={handleDragDrop}
                             />
                         ))
                     ) : (
@@ -89,7 +102,8 @@ const Tasks = () => {
                     small
                     underlineOnly
                     bgTransparent
-                    onPlusIconClick={onPlusIconClick}
+                    onPlusIconClick={onCreateTask}
+                    onKeyPress={onEnterPress}
                 />
             </div>
         </div>

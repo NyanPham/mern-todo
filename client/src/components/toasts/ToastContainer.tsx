@@ -26,7 +26,7 @@ const ToastContainer = () => {
     }
 
     return (
-        <div className="">
+        <div className="z-30">
             <Toast {...state} onClose={handleClose} icon={Icon} colorClasses={colorClasses} />
         </div>
     )

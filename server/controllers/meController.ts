@@ -52,7 +52,6 @@ export const updateMyAccount = catchAsync(async (req: IGetUserAuthInfoRequest, r
         new: true,
     })
 
-    console.log(updatedUser)
     if (!updatedUser) return new AppError('Failed to update account!', 400)
 
     res.status(200).json({

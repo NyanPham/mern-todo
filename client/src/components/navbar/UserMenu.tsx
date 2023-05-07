@@ -64,11 +64,11 @@ const UserMenu = () => {
     return (
         <div className="relative">
             <div
-                className="py-1 px-1 rounded-full border-[1px] border-gray-900/30 flex flex-row items-center gap-1 cursor-pointer select-none hover:shadow-md hover:-translate-y-[2px] transition duration-250"
+                className="py-1 px-1 rounded-full border-[1px] border-white-900/30 flex flex-row items-center gap-1 cursor-pointer select-none hover:shadow-md hover:-translate-y-[2px] transition duration-250"
                 onClick={toggleMenu}
             >
                 <Avatar imageSrc={currentUser?.imageSrc || 'default.jpg'} />
-                <Bars3Icon className="h-5 w-5 text-gray-500" />
+                <Bars3Icon className="h-5 w-5 text-white" />
             </div>
             {currentUser == null ? (
                 <>

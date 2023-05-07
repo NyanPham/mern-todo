@@ -25,9 +25,13 @@ const categorySchema = new mongoose.Schema({
         type: Date,
         default: Date.now(),
     },
+    displayOrder: {
+        type: Number,
+    },
 })
 
 categorySchema.index({ userId: 1, title: 1 }, { unique: true })
+categorySchema.index({ userId: 1, displayOrder: 1 }, { unique: false })
 
 const Category = mongoose.model('Category', categorySchema)
 
